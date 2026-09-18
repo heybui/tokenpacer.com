@@ -10,4 +10,4 @@ const routes = locales.map((locale) => ({
   component: Home,
 }))
 
-export const createApp = ViteSSG(App, { routes })
+export const createApp = ViteSSG(App, { base: import.meta.env.BASE_URL, routes })
