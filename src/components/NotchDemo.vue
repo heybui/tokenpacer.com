@@ -102,7 +102,7 @@ onUnmounted(() => {
       class="relative box-border w-full overflow-hidden rounded-t-2xl rounded-b-md bg-panel px-[.55rem] pt-[.55rem] ring-1 ring-white/7 shadow-[0_2.5rem_7.5rem_1.5rem_rgba(0,0,0,.72)]"
     >
       <div
-        class="relative h-[24rem] overflow-hidden rounded-t-[.65rem] rounded-b-[.2rem]"
+        class="stage relative h-[24rem] overflow-hidden rounded-t-[.65rem] rounded-b-[.2rem]"
         style="background: radial-gradient(70% 60% at 22% 18%, #3d5f80, transparent 68%), radial-gradient(80% 70% at 82% 84%, #2f4438, transparent 70%), linear-gradient(152deg, #223044, #1b2027 58%, #281f2e)"
       >
         <div
@@ -308,3 +308,14 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* The mock is drawn at a fixed 27rem design width; zoom keeps it whole on
+   narrow screens instead of letting the lid's overflow slice it.
+   ponytail: stepped, not fluid — CSS can't divide lengths into a unitless zoom. */
+@media (max-width: 32.5rem) { .stage { zoom: .91 } }
+@media (max-width: 30rem)   { .stage { zoom: .80 } }
+@media (max-width: 26.875rem) { .stage { zoom: .71 } }
+@media (max-width: 24.375rem) { .stage { zoom: .64 } }
+@media (max-width: 22.5rem)  { .stage { zoom: .54 } }
+</style>
