@@ -1,0 +1,18 @@
+# Node / Vite
+node_modules/
+dist/
+*.log
+.env
+.env.*
+!.env.example
+.vite/
+coverage/
+
+# macOS
+.DS_Store
+._*
+
+# Editors
+.vscode/
+.idea/
+.history/

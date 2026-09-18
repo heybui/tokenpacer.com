@@ -1,0 +1,64 @@
+{
+  "localeName": "Tiếng Việt",
+  "meta": {
+    "title": "Token Pacer — dùng AI đúng nhịp",
+    "description": "Với nhịp này, liệu có trụ tới lúc reset? Claude, Codex và Copilot trên cùng một thước đo, ngay trong notch của macOS."
+  },
+  "nav": { "skip": "Tới nội dung chính" },
+  "hero": {
+    "eyebrow": "Cho macOS · nằm gọn trong notch",
+    "headline": "Dùng AI đúng nhịp của bạn",
+    "sub": "Một câu hỏi, trả lời sẵn không cần hỏi: với nhịp này, liệu có trụ tới lúc reset? Claude, Codex và Copilot trên cùng một thước đo — trong notch, không đâu khác."
+  },
+  "features": [
+    { "label": "Liếc một cái, không phải dashboard", "note": "Phần trăm phiên và thời gian tới reset, luôn nằm trong notch." },
+    { "label": "Hạn mức tuần", "note": "Ngân sách thật sự kết thúc tuần của bạn, theo dõi song song." },
+    { "label": "Nhịp tiêu & dự phóng", "note": "Biết mình có cạn trước khi cửa sổ reset hay không." },
+    { "label": "Quy về từng nguồn", "note": "Tách theo model, dự án và bề mặt — thấy rõ đã tiêu vào đâu." },
+    { "label": "Ngưỡng do bạn đặt", "note": "Một thanh trượt dời cả mốc cảnh báo lẫn mốc vượt." },
+    { "label": "Không tốn chỗ màn hình", "note": "Sống trong notch. Không chật menu bar, không cửa sổ." }
+  ],
+  "cta": {
+    "download": "Tải cho macOS",
+    "kofi": "Ủng hộ trên Ko-fi",
+    "requirements": "{version} · {size} · cần macOS 15 trở lên",
+    "copy": "Sao chép",
+    "copied": "Đã chép",
+    "copyHint": "Sao chép lệnh Homebrew"
+  },
+  "demo": {
+    "label": "Token Pacer trong notch, lần lượt qua các trạng thái",
+    "captions": {
+      "pill": "Thu gọn — phần trăm phiên và đếm ngược tới reset, chỉ vậy",
+      "hover": "Rê chuột — hạn mức tuần và nhịp tiêu, khỏi cần bấm",
+      "panel": "Ghim — toàn cảnh, theo model, dự án và bề mặt",
+      "warn": "Vượt 90% thì tự bung ra, mỗi cửa sổ một lần",
+      "red": "Chạm trần — vạch báo đầy, đồng hồ chuyển đỏ",
+      "reset": "Cửa sổ reset — đầy lại từ đầu",
+      "prefs": "Ngưỡng là quyết định của bạn — một thanh trượt đặt cả hai mốc"
+    },
+    "pauseHint": "Rê chuột vào demo để tạm dừng",
+    "status": { "go": "Còn dư dả", "watch": "Đang tiêu nhanh", "over": "Nên kết thúc sớm" },
+    "left": "còn lại",
+    "week": "Tuần",
+    "headroom": "{burn}%/giờ · còn ~{min} phút",
+    "resetsIn": "Reset sau {time}",
+    "pinned": "phiên đang chạy · đã ghim",
+    "window": "5 giờ",
+    "weeklyCap": "Hạn mức tuần",
+    "weeklyResets": "reset T2 00:00",
+    "pace": "Nhịp tiêu",
+    "wrapSoon": "còn ~18 phút · nên kết thúc sớm",
+    "groups": { "model": "Theo model", "project": "Theo dự án", "surface": "Theo bề mặt" },
+    "prefs": {
+      "alerts": "Cảnh báo",
+      "watchAt": "Cảnh báo từ",
+      "overAt": "Vượt mức từ",
+      "sound": "Kêu khi vượt mức",
+      "general": "Chung",
+      "login": "Mở khi đăng nhập",
+      "hide": "Ẩn khi không có gì chạy"
+    }
+  },
+  "footer": { "rights": "© 2026 Token Pacer", "changelog": "Nhật ký thay đổi" }
+}

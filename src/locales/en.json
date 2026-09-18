@@ -1,0 +1,64 @@
+{
+  "localeName": "English",
+  "meta": {
+    "title": "Token Pacer — run your AI at the right pace",
+    "description": "At this rate, do I make it to the reset? Claude, Codex and Copilot on one scale, in the macOS notch."
+  },
+  "nav": { "skip": "Skip to content" },
+  "hero": {
+    "eyebrow": "For macOS · lives in the notch",
+    "headline": "Run your AI at the right pace",
+    "sub": "One question, answered without asking: at this rate, do I make it to the reset? Claude, Codex and Copilot on the same scale — in the notch, nowhere else."
+  },
+  "features": [
+    { "label": "Glance, not a dashboard", "note": "Session % and time to reset, permanently in the notch." },
+    { "label": "Weekly cap", "note": "The budget that actually ends your week, tracked alongside." },
+    { "label": "Pace & projection", "note": "Know whether you run dry before the window resets." },
+    { "label": "Full attribution", "note": "Split by model, project and surface — see where it went." },
+    { "label": "Thresholds you set", "note": "One slider moves where watch and over begin." },
+    { "label": "Zero screen space", "note": "Lives in the notch. No menu-bar clutter, no window." }
+  ],
+  "cta": {
+    "download": "Download for macOS",
+    "kofi": "Support on Ko-fi",
+    "requirements": "{version} · {size} · requires macOS 15+",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyHint": "Copy the Homebrew command"
+  },
+  "demo": {
+    "label": "Token Pacer in the notch, cycling through its states",
+    "captions": {
+      "pill": "Collapsed — session % and reset countdown, nothing else",
+      "hover": "Hover — weekly cap and pace, no click needed",
+      "panel": "Pinned — the whole picture, by model, project and surface",
+      "warn": "Going over at 90% expands it on its own, once per window",
+      "red": "Over at the cap — the mark reads full, the countdown turns red",
+      "reset": "Window resets — back to full",
+      "prefs": "Your thresholds, your call — one slider sets both marks"
+    },
+    "pauseHint": "Hover the demo to pause",
+    "status": { "go": "Plenty of room", "watch": "Running hot", "over": "Wrap up soon" },
+    "left": "left",
+    "week": "Week",
+    "headroom": "{burn}%/hr · ~{min} min headroom",
+    "resetsIn": "Resets in {time}",
+    "pinned": "session active · pinned",
+    "window": "5-hour",
+    "weeklyCap": "Weekly cap",
+    "weeklyResets": "resets Mon 00:00",
+    "pace": "Pace",
+    "wrapSoon": "~18 min left · wrap up soon",
+    "groups": { "model": "By model", "project": "By project", "surface": "By surface" },
+    "prefs": {
+      "alerts": "Alerts",
+      "watchAt": "Watch starts at",
+      "overAt": "Over starts at",
+      "sound": "Sound when over",
+      "general": "General",
+      "login": "Launch at login",
+      "hide": "Hide when nothing is running"
+    }
+  },
+  "footer": { "rights": "© 2026 Token Pacer", "changelog": "Changelog" }
+}

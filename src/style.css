@@ -1,0 +1,66 @@
+@import "tailwindcss";
+@import "@fontsource-variable/instrument-sans";
+
+@theme {
+  --font-sans: "Instrument Sans Variable", ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Tone rule mirrors the app: green < 75, amber 75–90, red > 90. */
+  --color-base: #0b0b0d;
+  --color-ink: #f2f2f4;
+  --color-go: #3ec98a;
+  --color-go-light: #a5f0cd;
+  --color-watch: #e8b33c;
+  --color-watch-light: #fbcda2;
+  --color-over: #e2543f;
+  --color-over-light: #f4ab9e;
+  --color-info: #5aa9d6;
+  --color-panel: #17181c;
+  --color-sunken: #14151a;
+
+  --animate-cap-in: cap-in 340ms ease-out;
+  --animate-ring-pop: ring-pop 700ms cubic-bezier(.34, 1.56, .64, 1);
+  --animate-creep: creep 1.6s ease-in-out infinite;
+  --animate-drift: drift 42s ease-in-out infinite;
+  --animate-glow-go: glow-go 2s ease-in-out infinite;
+  --animate-glow-watch: glow-watch 2s ease-in-out infinite;
+  --animate-glow-over: glow-over 2s ease-in-out infinite;
+}
+
+@keyframes cap-in { from { opacity: 0; transform: translateY(.25rem); } to { opacity: 1; transform: none; } }
+@keyframes ring-pop { 0% { transform: scale(1); } 42% { transform: scale(1.13); } 100% { transform: scale(1); } }
+/* Individual translate/scale properties, not transform: Tailwind v4's
+   -translate-x-1/2 sets `translate`, so a transform here would stack on top of
+   it and lift the mark clear off the bar. */
+@keyframes creep {
+  0%, 100% { translate: -50% -50%; scale: 1 1; }
+  50% { translate: calc(-50% + .25rem) -50%; scale: 1 1.25; }
+}
+@keyframes drift {
+  0%   { background-position: 8% 18%, 92% 26%, 50% 96%; }
+  33%  { background-position: 74% 34%, 22% 8%, 12% 70%; }
+  66%  { background-position: 30% 6%, 60% 74%, 88% 88%; }
+  100% { background-position: 8% 18%, 92% 26%, 50% 96%; }
+}
+@keyframes glow-go {
+  0%, 100% { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .125rem .375rem rgba(62,201,138,.28), inset 0 0 0 1px rgba(255,255,255,.08); }
+  50%      { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .3rem 1.5rem .375rem rgba(62,201,138,.85), inset 0 0 0 1px rgba(255,255,255,.08); }
+}
+@keyframes glow-watch {
+  0%, 100% { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .125rem .375rem rgba(232,179,60,.28), inset 0 0 0 1px rgba(255,255,255,.08); }
+  50%      { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .3rem 1.5rem .375rem rgba(232,179,60,.85), inset 0 0 0 1px rgba(255,255,255,.08); }
+}
+@keyframes glow-over {
+  0%, 100% { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .125rem .375rem rgba(226,84,63,.3), inset 0 0 0 1px rgba(255,255,255,.08); }
+  50%      { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .3rem 1.5rem .375rem rgba(226,84,63,.88), inset 0 0 0 1px rgba(255,255,255,.08); }
+}
+
+html { background: var(--color-base); }
+body { margin: 0; -webkit-font-smoothing: antialiased; }
+
+/* ponytail: Instrument Sans ships latin + latin-ext only, so stacked Vietnamese
+   tone marks would fall back mid-word. Give vi the system stack outright —
+   drop this rule if the family ever gains a vietnamese subset. */
+html:lang(vi) {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", ui-sans-serif, sans-serif;
+}
