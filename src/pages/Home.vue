@@ -1,20 +1,18 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useHead } from '@unhead/vue'
-import { RouterLink } from 'vue-router'
 import NotchDemo from '../components/NotchDemo.vue'
-import { DEFAULT_LOCALE, localePath, locales, messages, useI18n } from '../i18n'
+import { useI18n } from '../i18n'
 import { BREW, DOWNLOAD_URL, FILE_SIZE, KOFI_URL, SITE_URL, VERSION } from '../site'
 
-const { locale, t } = useI18n()
+const { t } = useI18n()
 
 const DOTS = ['#3ec98a', '#3ec98a', '#e8b33c', '#5aa9d6', '#e2543f', '#3ec98a']
 const features = computed(() => t('features').map((f, i) => ({ ...f, c: DOTS[i] })))
-const canonical = computed(() => SITE_URL + localePath(locale.value))
 
 useHead(
   computed(() => ({
-    htmlAttrs: { lang: locale.value },
+    htmlAttrs: { lang: 'en' },
     title: t('meta.title'),
     meta: [
       { name: 'description', content: t('meta.description') },
@@ -22,15 +20,13 @@ useHead(
       { property: 'og:site_name', content: 'Token Pacer' },
       { property: 'og:title', content: t('meta.title') },
       { property: 'og:description', content: t('meta.description') },
-      { property: 'og:url', content: canonical.value },
+      { property: 'og:url', content: SITE_URL },
       { property: 'og:image', content: `${SITE_URL}/icon-512.png` },
-      { property: 'og:locale', content: locale.value === 'vi' ? 'vi_VN' : 'en_US' },
+      { property: 'og:locale', content: 'en_US' },
       { name: 'twitter:card', content: 'summary_large_image' },
     ],
     link: [
-      { rel: 'canonical', href: canonical.value },
-      ...locales.map((l) => ({ rel: 'alternate', hreflang: l, href: SITE_URL + localePath(l) })),
-      { rel: 'alternate', hreflang: 'x-default', href: SITE_URL + localePath(DEFAULT_LOCALE) },
+      { rel: 'canonical', href: SITE_URL },
     ],
     script: [
       {
@@ -42,7 +38,7 @@ useHead(
           applicationCategory: 'DeveloperApplication',
           operatingSystem: 'macOS 15',
           softwareVersion: VERSION,
-          url: canonical.value,
+          url: SITE_URL,
           description: t('meta.description'),
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         }),
@@ -165,16 +161,6 @@ const copyBrew = async () => {
     <footer class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-[2.125rem] pt-[1.125rem] pb-7 text-[.75rem] text-white/52">
       <span>{{ t('footer.rights') }}</span>
       <nav class="flex items-center gap-4">
-        <RouterLink
-          v-for="l in locales"
-          :key="l"
-          :to="localePath(l)"
-          class="transition-colors hover:text-go"
-          :class="l === locale ? 'text-white' : 'text-white/52'"
-          :hreflang="l"
-        >
-          {{ messages[l].localeName }}
-        </RouterLink>
         <a href="#changelog" class="transition-colors hover:text-go">{{ t('footer.changelog') }}</a>
       </nav>
     </footer>
