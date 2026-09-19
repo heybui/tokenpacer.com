@@ -64,3 +64,12 @@ body { margin: 0; -webkit-font-smoothing: antialiased; }
 html:lang(vi) {
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", ui-sans-serif, sans-serif;
 }
+
+/* The running light. One angle property drives every conic variant, so twelve
+   border mechanisms cost four keyframes instead of twelve. */
+@property --tp-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes tp-run { to { --tp-a: 360deg; } }
+@keyframes tp-breathe { 0%, 100% { opacity: .18 } 50% { opacity: 1 } }
+@keyframes tp-pulse { 0%, 100% { opacity: .3 } 18% { opacity: 1 } }
+@keyframes tp-drip { from { background-position: 0 -120% } to { background-position: 0 220% } }
+@keyframes tp-sweep { from { background-position: -80% 0 } to { background-position: 180% 0 } }

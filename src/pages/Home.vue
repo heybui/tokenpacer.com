@@ -7,7 +7,7 @@ import { BREW, DOWNLOAD_URL, FILE_SIZE, KOFI_URL, SITE_URL, VERSION } from '../s
 
 const { t } = useI18n()
 
-const DOTS = ['#3ec98a', '#3ec98a', '#e8b33c', '#5aa9d6', '#e2543f', '#3ec98a']
+const DOTS = ['#3ec98a', '#3ec98a', '#e8b33c', '#5aa9d6', '#e2543f', '#3ec98a', '#5aa9d6', '#e8b33c']
 const features = computed(() => t('features').map((f, i) => ({ ...f, c: DOTS[i] })))
 
 useHead(
@@ -94,21 +94,21 @@ const copyBrew = async () => {
         <div class="flex min-w-0 flex-col gap-[1.625rem]">
           <div class="flex flex-col gap-[.875rem]">
             <div class="@container flex flex-col gap-[.7rem]">
-              <span class="font-mono text-[.69rem] font-medium tracking-[.16em] text-white/44 uppercase">{{ t('hero.eyebrow') }}</span>
+              <span class="font-mono text-[.78rem] font-medium tracking-[.14em] text-white/48 uppercase">{{ t('hero.eyebrow') }}</span>
               <h1 class="m-0 text-[min(2.875rem,6.55cqw)] leading-[1.1] font-semibold tracking-[-.03em] whitespace-nowrap">
                 {{ t('hero.headline') }}
               </h1>
             </div>
-            <p class="m-0 max-w-[46ch] text-base leading-[1.55] text-balance text-white/62">{{ t('hero.sub') }}</p>
+            <p class="m-0 max-w-[46ch] text-[1.08rem] leading-[1.55] text-balance text-white/62">{{ t('hero.sub') }}</p>
           </div>
 
-          <ul class="grid list-none grid-cols-[repeat(auto-fit,minmax(min(12rem,100%),1fr))] gap-x-7 gap-y-4 p-0">
+          <ul class="grid list-none grid-cols-[repeat(auto-fit,minmax(min(13.5rem,100%),1fr))] gap-x-7 gap-y-4 p-0">
             <li v-for="f in features" :key="f.label" class="flex min-w-0 flex-col gap-1">
               <div class="flex items-center gap-2">
                 <span class="size-[.3rem] shrink-0 rounded-full" :style="{ background: f.c }" />
-                <span class="text-[.85rem] font-semibold text-white">{{ f.label }}</span>
+                <span class="text-[.97rem] font-semibold text-white">{{ f.label }}</span>
               </div>
-              <span class="text-[.78rem] leading-[1.5] text-balance text-white/50">{{ f.note }}</span>
+              <span class="text-[.875rem] leading-[1.5] text-balance text-white/55">{{ f.note }}</span>
             </li>
           </ul>
 
@@ -116,7 +116,7 @@ const copyBrew = async () => {
             <div class="flex flex-wrap items-center gap-3">
               <a
                 :href="DOWNLOAD_URL"
-                class="inline-flex items-center gap-[.55rem] rounded-[.625rem] bg-go px-[1.375rem] py-[.8rem] text-[.9rem] font-semibold whitespace-nowrap text-[#06231a] transition-colors hover:bg-[#56dfa0]"
+                class="inline-flex items-center gap-[.55rem] rounded-[.625rem] bg-go px-[1.375rem] py-[.8rem] text-[.97rem] font-semibold whitespace-nowrap text-[#06231a] transition-colors hover:bg-[#56dfa0]"
               >
                 <svg viewBox="0 0 14 14" aria-hidden="true" class="size-[.875rem] shrink-0 fill-current">
                   <rect x="6" y="0" width="2" height="7" rx="1" />
@@ -128,7 +128,7 @@ const copyBrew = async () => {
               <a
                 :href="KOFI_URL"
                 rel="noopener"
-                class="inline-flex items-center gap-[.55rem] rounded-[.625rem] px-5 py-[.8rem] text-[.9rem] font-medium whitespace-nowrap text-white/82 ring-1 ring-white/16 transition-colors hover:text-white hover:ring-white/34"
+                class="inline-flex items-center gap-[.55rem] rounded-[.625rem] px-5 py-[.8rem] text-[.97rem] font-medium whitespace-nowrap text-white/82 ring-1 ring-white/16 transition-colors hover:text-white hover:ring-white/34"
               >
                 <span class="relative block h-[.8rem] w-[1.05rem] shrink-0 rounded-t-[.125rem] rounded-b-[.3rem] bg-[#ff5f5f]">
                   <span class="absolute top-[.125rem] -right-[.3rem] h-[.44rem] w-[.375rem] rounded-r-[.25rem] ring-2 ring-[#ff5f5f] ring-inset" />
@@ -138,15 +138,15 @@ const copyBrew = async () => {
             </div>
 
             <div class="flex flex-col gap-[.55rem]">
-              <span class="font-mono text-[.75rem] text-white/58">{{ t('cta.requirements', { version: VERSION, size: FILE_SIZE }) }}</span>
+              <span class="font-mono text-[.82rem] text-white/58">{{ t('cta.requirements', { version: VERSION, size: FILE_SIZE }) }}</span>
               <button
                 type="button"
                 :aria-label="t('cta.copyHint')"
                 class="inline-flex cursor-pointer items-center gap-[.625rem] self-start rounded-lg bg-sunken px-[.8rem] py-[.55rem] ring-1 ring-white/7 transition-[box-shadow] hover:ring-white/16"
                 @click="copyBrew"
               >
-                <span class="font-mono text-[.75rem] whitespace-nowrap text-white/72">{{ BREW }}</span>
-                <span class="text-[.69rem] font-medium whitespace-nowrap" :class="copied ? 'text-go' : 'text-white/40'">
+                <span class="font-mono text-[.82rem] whitespace-nowrap text-white/72">{{ BREW }}</span>
+                <span class="text-[.78rem] font-medium whitespace-nowrap" :class="copied ? 'text-go' : 'text-white/40'">
                   {{ copied ? t('cta.copied') : t('cta.copy') }}
                 </span>
               </button>
@@ -158,7 +158,7 @@ const copyBrew = async () => {
       </div>
     </main>
 
-    <footer class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-[2.125rem] pt-[1.125rem] pb-7 text-[.75rem] text-white/52">
+    <footer class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-[2.125rem] pt-[1.125rem] pb-7 text-[.82rem] text-white/52">
       <span>{{ t('footer.rights') }}</span>
       <nav class="flex items-center gap-4">
         <a href="#changelog" class="transition-colors hover:text-go">{{ t('footer.changelog') }}</a>

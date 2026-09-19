@@ -14,19 +14,98 @@ const PILL = { w: '14rem', h: '2.125rem', r: '.8rem' }
 const WIDE = { w: '24.5rem', h: '5.875rem', r: '1.5rem' }
 
 const STATES = [
-  { key: 'pill', pct: 58, weekly: 55, burn: 18, reset: '2h 06m', ...PILL },
-  { key: 'hover', pct: 58, weekly: 55, burn: 18, reset: '2h 06m', ...WIDE },
-  { key: 'panel', pct: 58, weekly: 55, burn: 18, reset: '2h 06m', w: '26rem', h: '11.625rem', r: '1.5rem' },
-  { key: 'warn', pct: 90, weekly: 78, burn: 34, reset: '0h 42m', ...WIDE },
-  { key: 'red', pct: 100, weekly: 82, burn: 0, reset: '0h 22m', ...PILL },
-  { key: 'reset', pct: 0, weekly: 12, burn: 4, reset: '5h 00m', ...PILL },
-  { key: 'prefs', pct: 58, weekly: 55, burn: 18, reset: '2h 06m', ...PILL },
+  { key: 'pill', pct: 58, weekly: 55, reset: '2h 06m', ...PILL },
+  { key: 'hover', pct: 58, weekly: 55, reset: '2h 06m', ...WIDE },
+  { key: 'panel', pct: 58, weekly: 55, reset: '2h 06m', w: '26rem', h: '11.625rem', r: '1.5rem' },
+  { key: 'warn', pct: 90, weekly: 78, reset: '0h 42m', ...WIDE },
+  { key: 'red', pct: 100, weekly: 82, reset: '0h 22m', ...PILL },
+  { key: 'reset', pct: 0, weekly: 12, reset: '5h 00m', ...PILL },
+  { key: 'prefs', pct: 58, weekly: 55, reset: '2h 06m', ...PILL },
+  { key: 'looks', pct: 58, weekly: 55, reset: '2h 06m', ...PILL },
+]
+
+const DIM = 'rgba(255,255,255,.2)'
+const r2 = (n) => Number(n.toFixed(2))
+
+// The app's twelve marks. Every one draws the same reading at menu-bar size —
+// which is the whole point of the grid: you pick by watching, not by name.
+const MARKS = [
+  ['Capsule bar', (p, c) => [
+    { t: 'rect', a: { x: 1, y: 5.6, width: 30, height: 2.8, rx: 1.4, fill: GO } },
+    { t: 'rect', a: { x: 32, y: 5.6, width: 5, height: 2.8, rx: 1.4, fill: WATCH } },
+    { t: 'rect', a: { x: 38, y: 5.6, width: 5, height: 2.8, rx: 1.4, fill: OVER } },
+    { t: 'rect', a: { x: r2(1 + 42 * p - 0.8), y: 2.4, width: 1.6, height: 9.2, rx: 0.8, fill: c } },
+  ]],
+  ['Ring wings', (p, c) => [8, 36].flatMap((cx) => [
+    { t: 'circle', a: { cx, cy: 7, r: 5, fill: 'none', stroke: DIM, 'stroke-width': 1.8 } },
+    { t: 'circle', a: { cx, cy: 7, r: 5, fill: 'none', stroke: c, 'stroke-width': 1.8, 'stroke-linecap': 'round', 'stroke-dasharray': `${r2(p * 31.4)} 99`, transform: `rotate(-90 ${cx} 7)` } },
+  ])],
+  ['Notch tank', (p, c) => [
+    { t: 'rect', a: { x: 8, y: 1.6, width: 28, height: 10.8, rx: 3, fill: 'none', stroke: DIM, 'stroke-width': 1.4 } },
+    { t: 'rect', a: { x: 9.6, y: 3.2, width: r2(24.8 * p), height: 7.6, rx: 2, fill: c } },
+  ]],
+  ['Pips', (p, c) => Array.from({ length: 10 }, (_, i) => (
+    { t: 'rect', a: { x: r2(1.5 + i * 4.2), y: 4.4, width: 2.6, height: 5.2, rx: 1.3, fill: i < Math.round(p * 10) ? c : DIM } }
+  ))],
+  ['Half gauge', (p, c) => [
+    { t: 'path', a: { d: 'M10 12a12 12 0 0 1 24 0', fill: 'none', stroke: DIM, 'stroke-width': 2 } },
+    { t: 'path', a: { d: 'M10 12a12 12 0 0 1 24 0', fill: 'none', stroke: c, 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-dasharray': `${r2(p * 37.7)} 99` } },
+  ]],
+  ['Eclipse', (p, c) => [
+    { t: 'circle', a: { cx: 22, cy: 7, r: 5.6, fill: c } },
+    { t: 'circle', a: { cx: r2(22 - 11.4 * p), cy: 7, r: 5.6, fill: '#000' } },
+    { t: 'circle', a: { cx: 22, cy: 7, r: 5.6, fill: 'none', stroke: DIM, 'stroke-width': 1 } },
+  ]],
+  ['Token stack', (p, c) => Array.from({ length: 5 }, (_, i) => (
+    { t: 'rect', a: { x: 16, y: r2(11.2 - i * 2.4), width: 12, height: 1.8, rx: 0.9, fill: i < Math.round(p * 5) ? c : DIM } }
+  ))],
+  ['Hourglass', (p, c) => [
+    { t: 'path', a: { d: 'M16 1.4h12l-6 5.6z', fill: c, opacity: r2(1 - p) } },
+    { t: 'path', a: { d: 'M16 12.6h12l-6-5.6z', fill: c, opacity: r2(p) } },
+    { t: 'path', a: { d: 'M16 1.4h12l-6 5.6 6 5.6H16l6-5.6z', fill: 'none', stroke: DIM, 'stroke-width': 1 } },
+  ]],
+  ['Dotted arc', (p, c) => Array.from({ length: 9 }, (_, i) => {
+    const a = Math.PI * (1 - i / 8)
+    return { t: 'circle', a: { cx: r2(22 + 14 * Math.cos(a)), cy: r2(11.5 - 9 * Math.sin(a)), r: 1.25, fill: i < Math.round(p * 9) ? c : DIM } }
+  })],
+  ['Dot matrix', (p, c) => Array.from({ length: 24 }, (_, i) => (
+    { t: 'circle', a: { cx: r2(4.5 + (i % 8) * 5), cy: r2(3.5 + Math.floor(i / 8) * 3.5), r: 1.2, fill: i < Math.round(p * 24) ? c : DIM } }
+  ))],
+  ['Signal strength', (p, c) => Array.from({ length: 5 }, (_, i) => (
+    { t: 'rect', a: { x: r2(12 + i * 4.4), y: r2(12 - (3 + i * 2.2)), width: 3, height: r2(3 + i * 2.2), rx: 1, fill: i < Math.round(p * 5) ? c : DIM } }
+  ))],
+  ['Thermometer', (p, c) => [
+    { t: 'rect', a: { x: 10, y: 4.8, width: 26, height: 4.4, rx: 2.2, fill: DIM } },
+    { t: 'rect', a: { x: 10, y: 4.8, width: r2(26 * p), height: 4.4, rx: 2.2, fill: c } },
+    { t: 'circle', a: { cx: 9, cy: 7, r: 3.6, fill: c } },
+  ]],
+]
+
+// The app's twelve running lights. All twelve are the same light on the same
+// outline, differing only in mechanism — so they cost one angle and four
+// keyframes between them. The top edge is never lit: it lies on the hardware.
+// The two edge-travelling lights need a background smaller than the outline.
+const SIZED = { 'Side drip': '100% 70%', 'Bottom sweep': '50% 100%' }
+const RUN = (d, extra = '') => `tp-run ${d} linear infinite${extra}`
+const BORDERS = [
+  ['Comet', 'conic-gradient(from var(--tp-a), transparent 0 74%, currentColor 97%, transparent)', RUN('2.6s')],
+  ['Dual comet', 'conic-gradient(from var(--tp-a), transparent 0 34%, currentColor 49%, transparent 50% 84%, currentColor 99%, transparent)', RUN('2.6s')],
+  ['Zone sweep', 'conic-gradient(from var(--tp-a), currentColor 0 18%, transparent 32%)', RUN('3.4s')],
+  ['Marching dashes', 'repeating-conic-gradient(from var(--tp-a), currentColor 0 5deg, transparent 5deg 14deg)', RUN('7s')],
+  ['Pulse wave', 'linear-gradient(currentColor, currentColor)', 'tp-pulse 1.4s ease-in-out infinite'],
+  ['Quarter trace', 'conic-gradient(from var(--tp-a), currentColor 0 24%, transparent 24%)', 'tp-run 3.2s steps(4) infinite'],
+  ['Counter pair', 'conic-gradient(from var(--tp-a), transparent 0 34%, currentColor 49%, transparent 50% 84%, currentColor 99%, transparent)', RUN('3s', ' reverse')],
+  ['Breathe', 'linear-gradient(currentColor, currentColor)', 'tp-breathe 3.4s ease-in-out infinite'],
+  ['Breathe glow', 'linear-gradient(currentColor, currentColor)', 'tp-breathe 3.4s ease-in-out infinite'],
+  ['Edge runners', 'repeating-conic-gradient(from var(--tp-a), currentColor 0 2deg, transparent 2deg 50deg)', RUN('2s')],
+  ['Side drip', 'linear-gradient(180deg, transparent, currentColor 50%, transparent)', 'tp-drip 2.2s linear infinite'],
+  ['Bottom sweep', 'linear-gradient(90deg, transparent, currentColor, transparent)', 'tp-sweep 2.4s linear infinite'],
 ]
 
 const SPLITS = [
   { title: 'model', rows: [['Opus 4.6', 54, WATCH], ['Sonnet 4.6', 38, INFO], ['Haiku', 8, MUTED]] },
   { title: 'project', rows: [['platform-api', 47, WATCH], ['token-pacer', 31, INFO], ['scratch', 22, MUTED]] },
-  { title: 'surface', rows: [['Claude Code', 78, WATCH], ['claude.ai', 17, INFO], ['API direct', 5, MUTED]] },
+  { title: 'provider', rows: [['Claude Code', 78, WATCH], ['Codex', 17, INFO], ['Copilot', 5, MUTED]] },
 ]
 
 const index = ref(0)
@@ -39,7 +118,7 @@ const lightOf = (p) => (p >= 90 ? '#f4ab9e' : p >= 75 ? '#fbcda2' : '#a5f0cd')
 
 const state = computed(() => STATES[index.value])
 const is = (key) => state.value.key === key
-const calm = computed(() => ['panel', 'reset', 'prefs'].includes(state.value.key))
+const calm = computed(() => ['panel', 'reset', 'prefs', 'looks'].includes(state.value.key))
 const tone = computed(() => (is('reset') ? GO : toneOf(state.value.pct)))
 const filled = computed(() => (is('reset') ? 100 : state.value.pct))
 // The ring reads full on reset (quota restored) but the mark drops back to the
@@ -52,12 +131,7 @@ const glow = computed(() => {
   return tone.value === OVER ? 'animate-glow-over' : tone.value === WATCH ? 'animate-glow-watch' : 'animate-glow-go'
 })
 const status = computed(() => t(`demo.status.${state.value.pct >= 90 ? 'over' : state.value.pct >= 75 ? 'watch' : 'go'}`))
-const headroom = computed(() =>
-  t('demo.headroom', {
-    burn: state.value.burn,
-    min: Math.max(1, Math.round(((100 - state.value.pct) / Math.max(1, state.value.burn)) * 60)),
-  }),
-)
+const marks = computed(() => MARKS.map(([name, draw]) => ({ name, shapes: draw(state.value.pct / 100, tone.value) })))
 
 const bars = computed(() =>
   Array.from({ length: 26 }, (_, i) => {
@@ -173,10 +247,82 @@ onUnmounted(() => {
           </div>
         </div>
 
+        <!-- Appearance pane: twelve marks, twelve running lights -->
+        <div
+          v-if="is('looks')"
+          class="absolute top-1/2 left-1/2 z-[3] w-[26.25rem] -translate-x-1/2 -translate-y-1/2 scale-[.72] overflow-hidden rounded-xl bg-[#131417] ring-1 ring-white/7 shadow-[0_1.875rem_4.375rem_rgba(0,0,0,.6)]"
+        >
+          <div class="relative flex h-[2.375rem] items-center bg-[#1a1b1f] px-[.8rem] shadow-[inset_0_-1px_0_rgba(255,255,255,.06)]">
+            <div class="z-[1] flex gap-[.45rem]">
+              <span v-for="n in 3" :key="n" class="size-[.625rem] rounded-full bg-[#3f4046]" />
+            </div>
+            <span class="absolute inset-x-0 text-center text-[.8rem] font-semibold text-white/60">Token Pacer</span>
+          </div>
+          <div class="flex flex-col gap-[1.125rem] px-[1.375rem] pt-[1.125rem] pb-[1.375rem]">
+            <div class="flex flex-col gap-[.7rem]">
+              <span class="text-[.625rem] font-medium tracking-[.16em] text-white/40 uppercase">{{ t('demo.looks.marks') }}</span>
+              <div class="grid grid-cols-4 gap-[.4rem]">
+                <div
+                  v-for="(m, i) in marks"
+                  :key="m.name"
+                  class="flex flex-col items-center gap-[.3rem] rounded-[.4rem] px-1 py-[.4rem] ring-1"
+                  :class="i === 0 ? 'bg-white/8 ring-go/60' : 'bg-white/3 ring-transparent'"
+                >
+                  <svg viewBox="0 0 44 14" class="h-[.82rem] w-[2.6rem] overflow-visible">
+                    <template v-for="(sh, j) in m.shapes" :key="j">
+                      <rect v-if="sh.t === 'rect'" v-bind="sh.a" />
+                      <circle v-else-if="sh.t === 'circle'" v-bind="sh.a" />
+                      <path v-else v-bind="sh.a" />
+                    </template>
+                  </svg>
+                  <span class="truncate text-[.5rem] leading-none text-white/45">{{ m.name }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col gap-[.7rem]">
+              <span class="text-[.625rem] font-medium tracking-[.16em] text-white/40 uppercase">{{ t('demo.looks.borders') }}</span>
+              <div class="grid grid-cols-4 gap-[.4rem]">
+                <div
+                  v-for="([name, bg, anim], i) in BORDERS"
+                  :key="name"
+                  class="flex flex-col items-center gap-[.3rem] rounded-[.4rem] px-1 py-[.4rem] ring-1"
+                  :class="i === 0 ? 'bg-white/8 ring-go/60' : 'bg-white/3 ring-transparent'"
+                >
+                  <div class="relative h-[1.05rem] w-[2.6rem] rounded-b-[.35rem]" :style="{ color: tone }">
+                    <div
+                      class="absolute -inset-px rounded-b-[.4rem] bg-no-repeat"
+                      :style="{
+                        backgroundImage: bg,
+                        backgroundSize: SIZED[name],
+                        animation: anim,
+                        filter: name === 'Breathe glow' ? 'drop-shadow(0 0 .18rem currentColor)' : undefined,
+                      }"
+                    />
+                    <div class="absolute inset-0 -top-px rounded-b-[.35rem] bg-black" />
+                  </div>
+                  <span class="truncate text-[.5rem] leading-none text-white/45">{{ name }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- The notch shell -->
         <div class="absolute top-0 left-1/2 z-[4] -translate-x-1/2">
+          <!-- Comet, the default running light: it runs outside the shell, and
+               never along the top edge, which lies against the hardware. -->
           <div
-            class="relative overflow-hidden bg-black transition-[width,height] duration-500 ease-[cubic-bezier(.3,1.3,.52,1)]"
+            v-if="!calm"
+            class="absolute -inset-[.11rem] z-0"
+            :style="{
+              color: tone,
+              borderRadius: `0 0 ${state.r} ${state.r}`,
+              backgroundImage: 'conic-gradient(from var(--tp-a), transparent 0 74%, currentColor 97%, transparent)',
+              animation: 'tp-run 2.6s linear infinite',
+            }"
+          />
+          <div
+            class="relative z-[1] overflow-hidden bg-black transition-[width,height] duration-500 ease-[cubic-bezier(.3,1.3,.52,1)]"
             :class="[glow, calm ? 'ring-1 ring-white/12' : '']"
             :style="{
               width: state.w,
@@ -185,7 +331,7 @@ onUnmounted(() => {
             }"
           >
             <!-- Collapsed pill -->
-            <div v-if="is('pill') || is('reset') || is('prefs') || is('red')" class="flex h-[2.125rem] items-center justify-between gap-12 pr-3 pl-[.625rem]">
+            <div v-if="is('pill') || is('reset') || is('looks') || is('prefs') || is('red')" class="flex h-[2.125rem] items-center justify-between gap-12 pr-3 pl-[.625rem]">
               <div class="flex items-center gap-[.45rem]">
                 <div class="relative h-1 w-[2.875rem] shrink-0" :class="is('reset') ? 'animate-ring-pop' : ''">
                   <span class="absolute inset-y-0 left-0 w-[74%] rounded-full bg-go" />
@@ -222,11 +368,11 @@ onUnmounted(() => {
                   <div class="h-1 overflow-hidden rounded-full bg-white/13">
                     <div class="h-full rounded-full" :style="{ width: `${state.weekly}%`, background: toneOf(state.weekly) }" />
                   </div>
-                  <span class="whitespace-nowrap font-mono text-[.62rem] text-white/40">{{ t('demo.week') }} {{ state.weekly }}% · {{ headroom }}</span>
+                  <span class="whitespace-nowrap font-mono text-[.62rem] text-white/40">{{ t('demo.week') }} {{ state.weekly }}% · {{ t('demo.weeklyResets') }}</span>
                 </div>
                 <div v-else class="flex flex-col gap-[.2rem]">
                   <span class="font-mono text-2xl leading-none font-medium text-over">{{ state.pct }}%</span>
-                  <span class="whitespace-nowrap text-[.75rem] text-white/65">{{ t('demo.wrapSoon') }}</span>
+                  <span class="whitespace-nowrap text-[.75rem] text-white/65">{{ t('demo.wrapSoon', { time: state.reset }) }}</span>
                 </div>
               </div>
             </div>
@@ -257,8 +403,8 @@ onUnmounted(() => {
                     </div>
                     <div class="flex flex-col gap-2">
                       <div class="flex items-baseline justify-between gap-3.5">
-                        <span class="whitespace-nowrap text-[.69rem] text-white/44">{{ t('demo.pace') }}</span>
-                        <span class="whitespace-nowrap font-mono text-[.69rem] text-white/70">{{ headroom }}</span>
+                        <span class="whitespace-nowrap text-[.69rem] text-white/44">{{ t('demo.history') }}</span>
+                        <span class="whitespace-nowrap font-mono text-[.69rem] text-white/70">{{ t('demo.historyNote') }}</span>
                       </div>
                       <div class="flex h-10 items-end gap-[.2rem]">
                         <div v-for="(bar, i) in bars" :key="i" class="min-w-0 flex-1 rounded-[.125rem]" :style="{ height: bar.h, background: bar.c }" />
@@ -289,7 +435,7 @@ onUnmounted(() => {
     </div>
 
     <div class="flex flex-col items-center gap-[.55rem]">
-      <span :key="state.key" class="animate-cap-in text-center text-[.8rem] text-balance text-white/65">{{ t(`demo.captions.${state.key}`) }}</span>
+      <span :key="state.key" class="animate-cap-in text-center text-[.9rem] text-balance text-white/65">{{ t(`demo.captions.${state.key}`) }}</span>
       <div class="flex items-center gap-[.625rem]">
         <div class="flex gap-[.375rem]">
           <span
