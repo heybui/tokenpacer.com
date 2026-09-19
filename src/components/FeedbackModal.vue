@@ -28,10 +28,23 @@ const canSend = computed(() => written.value && !tooLong.value && /^\S+@\S+\.\S+
 const title = computed(() => subj.value.trim() || kind.value[3] + msg.value.trim().split('\n')[0].slice(0, 60))
 const body = computed(() => `${msg.value.trim()}\n\n${t('feedback.signature', { version: VERSION })}`)
 
-const linkFor = (where) =>
-  where === 'email'
-    ? `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`[${t(`feedback.kinds.${kind.value[0]}.label`)}] ${title.value}`)}&body=${encodeURIComponent(body.value)}`
-    : `https://github.com/${GH_REPO}/issues/new?labels=${kind.value[2]}&title=${encodeURIComponent(title.value)}&body=${encodeURIComponent(body.value)}`
+const linkFor = (where) => {
+  const label = t(`feedback.kinds.${kind.value[0]}.label`)
+  if (where === 'email') {
+    const q = new URLSearchParams({ subject: `[${label}] ${title.value}`, body: body.value })
+    return `mailto:${CONTACT_EMAIL}?${q}`
+  }
+  // An issue FORM takes its prefill by field id; a body= param is ignored.
+  const q = new URLSearchParams({
+    template: 'feedback.yml',
+    labels: kind.value[2],
+    title: title.value,
+    topic: label,
+    details: msg.value.trim(),
+    version: VERSION,
+  })
+  return `https://github.com/${GH_REPO}/issues/new?${q}`
+}
 
 const handOff = (where) => {
   if (!written.value) return
