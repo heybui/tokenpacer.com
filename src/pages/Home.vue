@@ -4,7 +4,7 @@ import { useHead } from '@unhead/vue'
 import FeedbackModal from '../components/FeedbackModal.vue'
 import NotchDemo from '../components/NotchDemo.vue'
 import { useI18n } from '../i18n'
-import { BREW, DOWNLOAD_URL, FILE_SIZE, KOFI_URL, SITE_URL, TALLY_FORM_ID, VERSION } from '../site'
+import { BREW, DOWNLOAD_URL, FILE_SIZE, KOFI_URL, SITE_URL, VERSION } from '../site'
 
 const { t } = useI18n()
 
@@ -165,7 +165,6 @@ const copyBrew = async () => {
       <span>{{ t('footer.rights') }}</span>
       <nav class="flex items-center gap-4">
         <button
-          v-if="TALLY_FORM_ID"
           type="button"
           class="cursor-pointer bg-transparent p-0 font-sans text-[.82rem] text-white/52 transition-colors hover:text-go"
           @click="feedback = true"

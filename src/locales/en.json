@@ -108,7 +108,20 @@
   "feedback": {
     "title": "Send feedback",
     "blurb": "It goes to the two people who build Token Pacer. No account, no ticket number.",
-    "privacy": "Only what you attach is sent — nothing is collected from your Mac.",
+    "kinds": {
+      "broken": "Something's broken",
+      "idea": "An idea",
+      "else": "Anything else"
+    },
+    "placeholder": "What happened, or what would you change?",
+    "email": "Email, so we can reply",
+    "list": "Your address joins the release list. Unsubscribe any time.",
+    "privacy": "Only what you type is sent — nothing is collected from your Mac.",
+    "send": "Send",
+    "sending": "Sending…",
+    "err": "That didn't go through. Try again in a moment.",
+    "sentTitle": "Sent — thank you",
+    "sentBody": "Every message is read by a person. Expect a reply within a few days.",
     "close": "Close feedback"
   }
 }
