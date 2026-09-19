@@ -149,23 +149,38 @@ const fmtClock = () => {
   return `${day} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
-let cycle, tick
+// Any always-on animation keeps the compositor producing frames, so the only
+// way the page goes idle is for every one of them to stop. Off-screen or in a
+// background tab nobody is watching, so stop them there.
+const root = ref(null)
+const asleep = ref(false)
+const offscreen = ref(false)
+const refresh = () => (asleep.value = offscreen.value || document.hidden)
+
+let cycle, tick, io
 onMounted(() => {
   clock.value = fmtClock()
   tick = setInterval(() => (clock.value = fmtClock()), 15000)
   cycle = setInterval(() => {
-    if (!held.value) index.value = (index.value + 1) % STATES.length
+    if (!held.value && !asleep.value) index.value = (index.value + 1) % STATES.length
   }, 3000)
+  io = new IntersectionObserver(([e]) => { offscreen.value = !e.isIntersecting; refresh() })
+  io.observe(root.value)
+  document.addEventListener('visibilitychange', refresh)
 })
 onUnmounted(() => {
   clearInterval(cycle)
   clearInterval(tick)
+  io?.disconnect()
+  document.removeEventListener('visibilitychange', refresh)
 })
 </script>
 
 <template>
   <div
+    ref="root"
     class="flex min-w-0 flex-col gap-[1.125rem]"
+    :class="asleep && 'demo-asleep'"
     role="img"
     :aria-label="t('demo.label')"
     @mouseenter="held = true"
@@ -180,7 +195,7 @@ onUnmounted(() => {
         style="background: radial-gradient(70% 60% at 22% 18%, #3d5f80, transparent 68%), radial-gradient(80% 70% at 82% 84%, #2f4438, transparent 70%), linear-gradient(152deg, #223044, #1b2027 58%, #281f2e)"
       >
         <div
-          class="absolute inset-x-0 top-0 flex h-[1.55rem] items-center justify-between rounded-t-[.65rem] bg-black/60 px-[.8rem] text-[.72rem] text-white/80 backdrop-blur-lg"
+          class="absolute inset-x-0 top-0 flex h-[1.55rem] items-center justify-between rounded-t-[.65rem] bg-black/78 px-[.8rem] text-[.72rem] text-white/80"
         >
           <span class="font-semibold">Token Pacer</span>
           <span>{{ clock }}</span>

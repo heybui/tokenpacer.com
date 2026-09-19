@@ -31,23 +31,14 @@ const title = computed(() => {
   const first = msg.value.trim().split('\n')[0].slice(0, 60)
   return first ? kind.value[3] + first : ''
 })
-const body = computed(() => `${msg.value.trim()}\n\n${t('feedback.signature', { version: VERSION })}`)
 
-const linkFor = (where) => {
-  const label = t(`feedback.kinds.${kind.value[0]}.label`)
-  if (where === 'email') {
-    const q = new URLSearchParams(kept({
-      subject: title.value ? `[${label}] ${title.value}` : `[${label}]`,
-      body: msg.value.trim() && body.value,
-    }))
-    return `mailto:${CONTACT_EMAIL}?${q}`
-  }
+const issueUrl = () => {
   // An issue FORM takes its prefill by field id; a body= param is ignored.
   const q = new URLSearchParams(kept({
     template: 'feedback.yml',
     labels: kind.value[2],
     title: title.value,
-    topic: label,
+    topic: t(`feedback.kinds.${kind.value[0]}.label`),
     details: msg.value.trim(),
     version: VERSION,
   }))
@@ -56,12 +47,28 @@ const linkFor = (where) => {
 
 const kept = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v))
 
-const handOff = (where) => {
-  const url = linkFor(where)
-  route.value = where
-  // mailto: through window.open can leave a blank tab behind on some browsers.
-  if (where === 'email') window.location.href = url
-  else window.open(url, '_blank', 'noopener')
+// Neither hand-off takes the modal over any more — whatever is typed stays put
+// and the button reports itself in a tooltip that clears on its own.
+const flash = ref({ at: '', text: '' })
+let clear
+const say = (at, text) => {
+  flash.value = { at, text }
+  clearTimeout(clear)
+  clear = setTimeout(() => (flash.value = { at: '', text: '' }), 2400)
+}
+
+const handOff = async (where) => {
+  if (where === 'github') {
+    window.open(issueUrl(), '_blank', 'noopener')
+    return say('github', t('feedback.routes.opened'))
+  }
+  let copied = true
+  try {
+    await navigator.clipboard.writeText(CONTACT_EMAIL)
+  } catch {
+    copied = false
+  }
+  say('email', t(copied ? 'feedback.routes.copied' : 'feedback.routes.copyFail'))
 }
 
 const onKey = (e) => e.key === 'Escape' && emit('close')
@@ -72,6 +79,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('keydown', onKey)
   document.body.style.overflow = ''
+  clearTimeout(clear)
 })
 
 // JSONP, because list-manage sends no CORS headers: a fetch cannot read the
@@ -131,17 +139,8 @@ const clean = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/, ''
         <div class="flex size-11 items-center justify-center rounded-full bg-[rgba(62,201,138,.14)] shadow-[inset_0_0_0_1px_rgba(62,201,138,.4)]">
           <span class="block h-2 w-[.94rem] -translate-y-[.19rem] translate-x-[.06rem] -rotate-45 border-b-[2.5px] border-l-[2.5px] border-go" />
         </div>
-        <span class="text-base font-semibold text-white">{{ t(`feedback.sent.${route}.title`) }}</span>
-        <span class="max-w-[34ch] text-[.82rem] leading-[1.55] text-pretty text-white/55">{{ t(`feedback.sent.${route}.note`) }}</span>
-        <a
-          v-if="route !== 'direct'"
-          :href="linkFor(route)"
-          :target="route === 'github' ? '_blank' : undefined"
-          rel="noopener"
-          class="font-mono text-[.69rem] text-white/44 underline decoration-white/20 underline-offset-4 transition-colors hover:text-go"
-        >
-          {{ route === 'github' ? `github.com/${GH_REPO}/issues/new` : CONTACT_EMAIL }}
-        </a>
+        <span class="text-base font-semibold text-white">{{ t('feedback.sent.direct.title') }}</span>
+        <span class="max-w-[34ch] text-[.82rem] leading-[1.55] text-pretty text-white/55">{{ t('feedback.sent.direct.note') }}</span>
       </div>
 
       <!-- Form -->
@@ -150,7 +149,7 @@ const clean = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/, ''
           <div class="flex items-start gap-[.875rem]">
             <div class="flex min-w-0 flex-col gap-[.3rem]">
               <span id="fb-title" class="text-[1.06rem] font-semibold tracking-[-.015em] text-white">{{ t('feedback.title') }}</span>
-              <span class="text-[.82rem] leading-[1.5] text-pretty text-white/55">{{ t('feedback.blurb') }}</span>
+              <span class="text-[.82rem] leading-[1.5] text-balance text-white/55">{{ t('feedback.blurb') }}</span>
             </div>
             <button
               type="button"
@@ -181,26 +180,45 @@ const clean = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/, ''
           </div>
 
           <div class="flex flex-col gap-[.56rem]">
+            <label for="fb-subj" class="font-mono text-[.6rem] tracking-[.12em] text-white/42 uppercase">
+              {{ t('feedback.labels.subject') }}
+              <span class="ml-[.35em] normal-case text-white/28">{{ t('feedback.labels.optional') }}</span>
+            </label>
             <input
+              id="fb-subj"
               v-model="subj"
               type="text"
               maxlength="90"
               :placeholder="t(`feedback.kinds.${kind[0]}.subject`)"
               class="h-10 w-full rounded-[.625rem] border-0 bg-[#17181d] px-[.8rem] font-sans text-[.84rem] font-medium text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.09)] outline-none placeholder:font-normal placeholder:text-white/32 focus:shadow-[inset_0_0_0_1px_rgba(62,201,138,.5)]"
             />
+            <div class="mt-[.3rem] flex items-baseline justify-between gap-2">
+              <label for="fb-msg" class="font-mono text-[.6rem] tracking-[.12em] text-white/42 uppercase">
+                {{ t('feedback.labels.message') }}
+                <span class="ml-[.15em] text-go" :aria-label="t('feedback.labels.required')">*</span>
+              </label>
+              <span class="font-mono text-[.6rem] tabular-nums" :class="tooLong ? 'text-watch' : 'text-white/35'">{{ msg.length }} / 600</span>
+            </div>
             <textarea
+              id="fb-msg"
               v-model="msg"
               maxlength="600"
+              aria-required="true"
               :placeholder="t('feedback.placeholder')"
               class="h-[8.25rem] w-full resize-none rounded-[.625rem] border-0 bg-[#17181d] px-[.875rem] py-[.8rem] font-sans text-[.84rem] leading-[1.55] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.09)] outline-none placeholder:text-white/32 focus:shadow-[inset_0_0_0_1px_rgba(62,201,138,.5)]"
             />
-            <span class="self-end font-mono text-[.66rem]" :class="tooLong ? 'text-watch' : 'text-white/45'">{{ msg.length }} / 600</span>
           </div>
 
           <div class="flex flex-col gap-[.44rem]">
+            <label for="fb-mail" class="font-mono text-[.6rem] tracking-[.12em] text-white/42 uppercase mb-[.12rem]">
+              {{ t('feedback.labels.email') }}
+              <span class="ml-[.15em] text-go" :aria-label="t('feedback.labels.required')">*</span>
+            </label>
             <input
+              id="fb-mail"
               v-model="mail"
               type="email"
+              aria-required="true"
               :placeholder="t('feedback.email')"
               class="h-10 w-full rounded-[.625rem] border-0 bg-[#17181d] px-[.8rem] font-sans text-[.84rem] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.09)] outline-none placeholder:text-white/32 focus:shadow-[inset_0_0_0_1px_rgba(62,201,138,.5)]"
             />
@@ -214,22 +232,29 @@ const clean = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/, ''
               <span class="h-px flex-1 bg-white/8" />
             </div>
             <div class="grid grid-cols-2 gap-[.625rem]">
-              <button
-                v-for="r in [['github', 'GH', `${GH_REPO}`], ['email', '@', CONTACT_EMAIL]]"
-                :key="r[0]"
-                type="button"
-                class="flex cursor-pointer items-center gap-[.625rem] rounded-[.7rem] bg-[#17181d] px-[.8rem] py-[.7rem] text-left shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)] transition-[background,box-shadow] hover:bg-[#1c1e23] hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,.16)]"
-                @click="handOff(r[0])"
-              >
-                <span class="flex size-[1.375rem] shrink-0 items-center justify-center rounded-[.44rem] bg-white/8 font-mono text-[.62rem] font-semibold text-white/72">{{ r[1] }}</span>
-                <span class="flex min-w-0 flex-col gap-[.125rem]">
-                  <span class="text-[.78rem] font-semibold whitespace-nowrap text-white/86">{{ t(`feedback.routes.${r[0]}`) }}</span>
-                  <span class="truncate font-mono text-[.62rem] text-white/44">{{ r[2] }}</span>
+              <div v-for="r in [['github', 'GH', `${GH_REPO}`, '↗'], ['email', '@', CONTACT_EMAIL, '⧉']]" :key="r[0]" class="relative">
+                <button
+                  type="button"
+                  class="flex w-full cursor-pointer items-center gap-[.625rem] rounded-[.7rem] bg-[#17181d] px-[.8rem] py-[.7rem] text-left shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)] transition-[background,box-shadow] hover:bg-[#1c1e23] hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,.16)]"
+                  @click="handOff(r[0])"
+                >
+                  <span class="flex size-[1.375rem] shrink-0 items-center justify-center rounded-[.44rem] bg-white/8 font-mono text-[.62rem] font-semibold text-white/72">{{ r[1] }}</span>
+                  <span class="flex min-w-0 flex-col gap-[.125rem]">
+                    <span class="text-[.78rem] font-semibold whitespace-nowrap text-white/86">{{ t(`feedback.routes.${r[0]}`) }}</span>
+                    <span class="truncate font-mono text-[.62rem] text-white/44">{{ r[2] }}</span>
+                  </span>
+                  <span class="ml-auto shrink-0 text-[.75rem] text-white/34">{{ r[3] }}</span>
+                </button>
+                <span
+                  v-if="flash.at === r[0]"
+                  class="pointer-events-none absolute -top-[1.9rem] left-1/2 -translate-x-1/2 animate-fb-in rounded-md bg-[#2a2d34] px-[.5rem] py-[.28rem] text-[.68rem] font-medium whitespace-nowrap text-white/88 shadow-[0_.4rem_1rem_rgba(0,0,0,.5)]"
+                >
+                  {{ flash.text }}
                 </span>
-                <span class="ml-auto shrink-0 text-[.75rem] text-white/34">↗</span>
-              </button>
+              </div>
             </div>
             <span class="text-[.72rem] leading-[1.5] text-pretty text-white/55">{{ t('feedback.routes.note') }}</span>
+            <span role="status" aria-live="polite" class="sr-only">{{ flash.text }}</span>
           </div>
 
           <span v-if="tooLong" class="text-[.72rem] text-watch">{{ t('feedback.tooLong') }}</span>

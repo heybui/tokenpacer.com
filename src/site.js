@@ -1,9 +1,11 @@
 // Change this once and every canonical, hreflang and og:url follows.
 export const SITE_URL = 'https://tokenpacer.com'
-export const VERSION = 'v1.0.0'
-export const FILE_SIZE = '4.2 MB'
+export const VERSION = 'v0.1.0'
+export const FILE_SIZE = '2.7 MB'
 export const BREW = 'brew install --cask token-pacer'
-export const DOWNLOAD_URL = 'https://github.com/heybui/token-pacer/releases/latest'
+// Releases live on THIS repo — token-pacer is private, so its assets 404 for
+// everyone but us. Sparkle reads the same releases via public/appcast.xml.
+export const DOWNLOAD_URL = 'https://github.com/heybui/tokenpacer.com/releases/latest'
 // Mailchimp's embedded-form endpoint, swapped to post-json for the JSONP reply.
 export const MC_ACTION =
   'https://redevify.us22.list-manage.com/subscribe/post-json?u=680a3c16f17ebe57f4fc63531&id=13f604e155&f_id=0087c2e1f0'

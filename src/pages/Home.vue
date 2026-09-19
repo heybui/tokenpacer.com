@@ -1,14 +1,14 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useHead } from '@unhead/vue'
 import FeedbackModal from '../components/FeedbackModal.vue'
 import NotchDemo from '../components/NotchDemo.vue'
 import { useI18n } from '../i18n'
-import { BREW, DOWNLOAD_URL, FILE_SIZE, KOFI_URL, SITE_URL, VERSION } from '../site'
+import { DOWNLOAD_URL, FILE_SIZE, SITE_URL, VERSION } from '../site'
 
 const { t } = useI18n()
 
-const DOTS = ['#3ec98a', '#3ec98a', '#e8b33c', '#5aa9d6', '#e8b33c', '#3ec98a', '#5aa9d6', '#e2543f']
+const DOTS = ['#3ec98a', '#3ec98a', '#e8b33c', '#5aa9d6', '#e8b33c', '#3ec98a']
 const features = computed(() => t('features').map((f, i) => ({ ...f, c: DOTS[i] })))
 
 useHead(
@@ -48,34 +48,54 @@ useHead(
   })),
 )
 
-const feedback = ref(false)
-
-const copied = ref(false)
-let reset
-const copyBrew = async () => {
-  try {
-    await navigator.clipboard.writeText(BREW)
-  } catch {
-    /* clipboard blocked — the command is on screen anyway */
-  }
-  copied.value = true
-  clearTimeout(reset)
-  reset = setTimeout(() => (copied.value = false), 1600)
+// The hash IS the modal state, so /#feedback deep-links straight in and Back closes it.
+const hash = ref('')
+const readHash = () => (hash.value = location.hash.slice(1))
+const close = () => {
+  history.replaceState(null, '', location.pathname + location.search)
+  readHash()
 }
+onMounted(() => {
+  readHash()
+  window.addEventListener('hashchange', readHash)
+})
+onUnmounted(() => window.removeEventListener('hashchange', readHash))
+
+// The appcast CI rewrites each release is the only place the current DMG is
+// named, so read the button's target from it instead of hardcoding a filename
+// that goes stale. Prerender ships the releases page as the href; this upgrades
+// it to a one-click download once the feed lands.
+// ponytail: takes the first enclosure. Fine while CI writes a single-item feed.
+const dmg = ref(DOWNLOAD_URL)
+onMounted(async () => {
+  try {
+    const feed = await (await fetch('/appcast.xml')).text()
+    const url = new DOMParser().parseFromString(feed, 'application/xml').querySelector('enclosure')?.getAttribute('url')
+    if (url) dmg.value = url
+  } catch {
+    /* feed unreachable — the releases page is already in the href */
+  }
+})
 </script>
 
 <template>
   <div
-    class="flex min-h-dvh animate-drift flex-col bg-base font-sans text-ink"
-    style="
-      background-image: radial-gradient(50% 50% at 50% 50%, rgba(62, 201, 138, 0.5), transparent 68%),
-        radial-gradient(50% 50% at 50% 50%, rgba(56, 124, 172, 0.46), transparent 70%),
-        radial-gradient(50% 50% at 50% 50%, rgba(232, 179, 60, 0.3), transparent 68%);
-      background-size: 150% 140%, 165% 150%, 140% 130%;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-    "
+    class="flex min-h-dvh flex-col font-sans text-ink"
   >
+    <!-- The ambient wash, on its own composited layer so it costs one raster
+         rather than one per frame. Oversized, so the drift never shows an edge. -->
+    <div
+      aria-hidden="true"
+      class="animate-drift pointer-events-none fixed inset-[-12%] -z-10 will-change-transform"
+      style="
+        background-image: radial-gradient(50% 50% at 50% 50%, rgba(62, 201, 138, 0.5), transparent 68%),
+          radial-gradient(50% 50% at 50% 50%, rgba(56, 124, 172, 0.46), transparent 70%),
+          radial-gradient(50% 50% at 50% 50%, rgba(232, 179, 60, 0.3), transparent 68%);
+        background-size: 150% 140%, 165% 150%, 140% 130%;
+        background-position: 8% 18%, 92% 26%, 50% 96%;
+        background-repeat: no-repeat;
+      "
+    />
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:m-4 focus:rounded-lg focus:bg-go focus:px-4 focus:py-2 focus:text-[#06231a]">
       {{ t('nav.skip') }}
     </a>
@@ -118,7 +138,7 @@ const copyBrew = async () => {
           <div class="flex flex-col gap-[.875rem]">
             <div class="flex flex-wrap items-center gap-3">
               <a
-                :href="DOWNLOAD_URL"
+                :href="dmg"
                 class="inline-flex items-center gap-[.55rem] rounded-[.625rem] bg-go px-[1.375rem] py-[.8rem] text-[.97rem] font-semibold whitespace-nowrap text-[#06231a] transition-colors hover:bg-[#56dfa0]"
               >
                 <svg viewBox="0 0 14 14" aria-hidden="true" class="size-[.875rem] shrink-0 fill-current">
@@ -128,32 +148,9 @@ const copyBrew = async () => {
                 </svg>
                 {{ t('cta.download') }}
               </a>
-              <a
-                :href="KOFI_URL"
-                rel="noopener"
-                class="inline-flex items-center gap-[.55rem] rounded-[.625rem] px-5 py-[.8rem] text-[.97rem] font-medium whitespace-nowrap text-white/82 ring-1 ring-white/16 transition-colors hover:text-white hover:ring-white/34"
-              >
-                <span class="relative block h-[.8rem] w-[1.05rem] shrink-0 rounded-t-[.125rem] rounded-b-[.3rem] bg-[#ff5f5f]">
-                  <span class="absolute top-[.125rem] -right-[.3rem] h-[.44rem] w-[.375rem] rounded-r-[.25rem] ring-2 ring-[#ff5f5f] ring-inset" />
-                </span>
-                {{ t('cta.kofi') }}
-              </a>
             </div>
 
-            <div class="flex flex-col gap-[.55rem]">
-              <span class="font-mono text-[.82rem] text-white/58">{{ t('cta.requirements', { version: VERSION, size: FILE_SIZE }) }}</span>
-              <button
-                type="button"
-                :aria-label="t('cta.copyHint')"
-                class="inline-flex cursor-pointer items-center gap-[.625rem] self-start rounded-lg bg-sunken px-[.8rem] py-[.55rem] ring-1 ring-white/7 transition-[box-shadow] hover:ring-white/16"
-                @click="copyBrew"
-              >
-                <span class="font-mono text-[.82rem] whitespace-nowrap text-white/72">{{ BREW }}</span>
-                <span class="text-[.78rem] font-medium whitespace-nowrap" :class="copied ? 'text-go' : 'text-white/40'">
-                  {{ copied ? t('cta.copied') : t('cta.copy') }}
-                </span>
-              </button>
-            </div>
+            <span class="font-mono text-[.82rem] text-white/58">{{ t('cta.requirements', { version: VERSION, size: FILE_SIZE }) }}</span>
           </div>
         </div>
 
@@ -164,17 +161,11 @@ const copyBrew = async () => {
     <footer class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-[2.125rem] pt-[1.125rem] pb-7 text-[.82rem] text-white/52">
       <span>{{ t('footer.rights') }}</span>
       <nav class="flex items-center gap-4">
-        <button
-          type="button"
-          class="cursor-pointer bg-transparent p-0 font-sans text-[.82rem] text-white/52 transition-colors hover:text-go"
-          @click="feedback = true"
-        >
-          {{ t('footer.feedback') }}
-        </button>
+        <a href="#feedback" class="transition-colors hover:text-go">{{ t('footer.feedback') }}</a>
         <a href="#changelog" class="transition-colors hover:text-go">{{ t('footer.changelog') }}</a>
       </nav>
     </footer>
 
-    <FeedbackModal v-if="feedback" @close="feedback = false" />
+    <FeedbackModal v-if="hash === 'feedback'" @close="close" />
   </div>
 </template>

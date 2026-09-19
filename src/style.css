@@ -38,11 +38,27 @@
   0%, 100% { translate: -50% -50%; scale: 1 1; }
   50% { translate: calc(-50% + .25rem) -50%; scale: 1 1.25; }
 }
+/* Transform, not background-position: the compositor moves an already-rastered
+   layer instead of repainting three viewport-sized gradients every frame. */
 @keyframes drift {
-  0%   { background-position: 8% 18%, 92% 26%, 50% 96%; }
-  33%  { background-position: 74% 34%, 22% 8%, 12% 70%; }
-  66%  { background-position: 30% 6%, 60% 74%, 88% 88%; }
-  100% { background-position: 8% 18%, 92% 26%, 50% 96%; }
+  0%   { transform: translate3d(-3%, -4%, 0); }
+  33%  { transform: translate3d(4%, 2%, 0); }
+  66%  { transform: translate3d(-1%, 5%, 0); }
+  100% { transform: translate3d(-3%, -4%, 0); }
+}
+
+/* Nothing to watch: park every animation in the subtree. */
+.demo-asleep, .demo-asleep *, .demo-asleep *::before, .demo-asleep *::after {
+  animation-play-state: paused !important;
+}
+
+/* Nothing here is load-bearing, so honour the OS switch. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
 }
 @keyframes glow-go {
   0%, 100% { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .125rem .375rem rgba(62,201,138,.28), inset 0 0 0 1px rgba(255,255,255,.08); }

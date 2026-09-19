@@ -25,10 +25,6 @@
       "note": "Every figure is the provider's own. Never an estimate, never a guess."
     },
     {
-      "label": "See where it went",
-      "note": "Pin the panel: split by model, by project, and 30 days of history."
-    },
-    {
       "label": "Nothing to sign into",
       "note": "No account, no API key, no dashboard. It reads the CLI you already run — that's the whole setup."
     },
@@ -37,18 +33,14 @@
       "note": "No telemetry, no Accessibility prompt, nothing uploaded. The only call out is its own update check."
     },
     {
-      "label": "Twelve ways to wear it",
-      "note": "Twelve marks, twelve running lights. Watch each one work at real size, then pick."
-    },
-    {
-      "label": "Free, and it listens",
-      "note": "No price, no tier, no upsell. Send feedback from the menu — it shapes what ships next."
+      "label": "Light on the Mac it watches",
+      "note": "Native Swift, no web view. The drawing runs on CoreAnimation, so it idles cheap and stays cool."
     }
   ],
   "cta": {
     "download": "Download for macOS",
     "kofi": "Support on Ko-fi",
-    "requirements": "{version} · {size} · requires macOS 15+",
+    "requirements": "Free · {version} · {size} · Apple silicon, macOS 15+",
     "copy": "Copy",
     "copied": "Copied",
     "copyHint": "Copy the Homebrew command"
@@ -107,7 +99,7 @@
   },
   "feedback": {
     "title": "Send feedback",
-    "blurb": "Straight to the two people who build Token Pacer. No account, no ticket number.",
+    "blurb": "Straight to the person who builds it. No account, no ticket.",
     "topic": "Topic",
     "kinds": {
       "bug": {
@@ -125,13 +117,16 @@
     },
     "placeholder": "What happened, what you expected, and the steps to get there.",
     "email": "Email, so we can reply",
-    "list": "Your address joins the release list. Unsubscribe any time.",
+    "list": "Let's keep in touch — release notes only, and you can unsubscribe any time.",
     "tooLong": "Too long to send from here — take it to GitHub or email below.",
     "elsewhere": "Or take it elsewhere",
     "routes": {
       "github": "GitHub issue",
       "email": "Email us",
-      "note": "Both open prefilled with what you have typed — GitHub is public and tracked to a release, email is private and takes attachments."
+      "note": "Reach out however suits you. GitHub is public, email is private.",
+      "opened": "Opened in a new tab",
+      "copied": "Email address copied",
+      "copyFail": "Copy blocked — the address is above"
     },
     "privacy": "Only what you type is sent — nothing is collected from your Mac.",
     "send": "Send",
@@ -140,18 +135,17 @@
     "sent": {
       "direct": {
         "title": "Sent — thank you",
-        "note": "Every message is read by a person. Expect a reply within a few days."
-      },
-      "github": {
-        "title": "GitHub is opening",
-        "note": "The issue is prefilled — add screenshots, then post it. Every issue gets read."
-      },
-      "email": {
-        "title": "Your mail app is opening",
-        "note": "The message is prefilled and addressed. Add attachments, then send."
+        "note": "Read by the person who builds it. Expect a reply within a few days."
       }
     },
     "signature": "— sent from Token Pacer {version} on macOS",
-    "close": "Close feedback"
+    "close": "Close feedback",
+    "labels": {
+      "subject": "Subject",
+      "optional": "optional",
+      "message": "Message",
+      "email": "Email",
+      "required": "required"
+    }
   }
 }
