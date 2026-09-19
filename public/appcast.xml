@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>TokenPacer</title>
+        <item>
+            <title>0.1.0</title>
+            <pubDate>Sat, 19 Sep 2026 20:52:18 +0000</pubDate>
+            <sparkle:version>211</sparkle:version>
+            <sparkle:shortVersionString>0.1.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <enclosure url="https://github.com/heybui/tokenpacer.com/releases/download/v0.1.0/TokenPacer-0.1.0.dmg" length="2795498" type="application/octet-stream" sparkle:edSignature="h5SvYEjQbIDFY8cCohI65DvWA0gi+ndhUDTwx2kDJv8lUrn3ZPoMS92VrPhXmLFv6ubqrZjAWDYU+VFtSH8/DA=="/>
+        </item>
+    </channel>
+</rss>
