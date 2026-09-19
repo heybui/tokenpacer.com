@@ -17,7 +17,7 @@
       "note": "Lives in the notch. Nothing to open, nothing to click, no window in your way."
     },
     {
-      "label": "Three agents, one scale",
+      "label": "Multiple agents, one scale",
       "note": "Claude Code, Codex and Copilot side by side — each with its own reset clock."
     },
     {
@@ -29,12 +29,12 @@
       "note": "Pin the panel: split by model, by project, and 30 days of history."
     },
     {
-      "label": "Your line, your warning",
-      "note": "Set where amber and red begin. One banner when you cross it, then silence."
+      "label": "Nothing to sign into",
+      "note": "No account, no API key, no dashboard. It reads the CLI you already run — that's the whole setup."
     },
     {
-      "label": "Asks for nothing",
-      "note": "No account, no API key, no Accessibility prompt, no network call. Ever."
+      "label": "Your usage stays yours",
+      "note": "No telemetry, no Accessibility prompt, nothing uploaded. The only call out is its own update check."
     },
     {
       "label": "Twelve ways to wear it",

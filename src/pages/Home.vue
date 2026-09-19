@@ -7,7 +7,7 @@ import { BREW, DOWNLOAD_URL, FILE_SIZE, KOFI_URL, SITE_URL, VERSION } from '../s
 
 const { t } = useI18n()
 
-const DOTS = ['#3ec98a', '#3ec98a', '#e8b33c', '#5aa9d6', '#e2543f', '#3ec98a', '#5aa9d6', '#e8b33c']
+const DOTS = ['#3ec98a', '#3ec98a', '#e8b33c', '#5aa9d6', '#e8b33c', '#3ec98a', '#5aa9d6', '#e2543f']
 const features = computed(() => t('features').map((f, i) => ({ ...f, c: DOTS[i] })))
 
 useHead(
