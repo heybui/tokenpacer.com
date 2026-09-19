@@ -25,29 +25,38 @@ const written = computed(() => msg.value.trim().length > 3)
 const tooLong = computed(() => msg.value.trim().length > MC_MAX)
 const canSend = computed(() => written.value && !tooLong.value && /^\S+@\S+\.\S+$/.test(mail.value))
 
-const title = computed(() => subj.value.trim() || kind.value[3] + msg.value.trim().split('\n')[0].slice(0, 60))
+const title = computed(() => {
+  const typed = subj.value.trim()
+  if (typed) return typed
+  const first = msg.value.trim().split('\n')[0].slice(0, 60)
+  return first ? kind.value[3] + first : ''
+})
 const body = computed(() => `${msg.value.trim()}\n\n${t('feedback.signature', { version: VERSION })}`)
 
 const linkFor = (where) => {
   const label = t(`feedback.kinds.${kind.value[0]}.label`)
   if (where === 'email') {
-    const q = new URLSearchParams({ subject: `[${label}] ${title.value}`, body: body.value })
+    const q = new URLSearchParams(kept({
+      subject: title.value ? `[${label}] ${title.value}` : `[${label}]`,
+      body: msg.value.trim() && body.value,
+    }))
     return `mailto:${CONTACT_EMAIL}?${q}`
   }
   // An issue FORM takes its prefill by field id; a body= param is ignored.
-  const q = new URLSearchParams({
+  const q = new URLSearchParams(kept({
     template: 'feedback.yml',
     labels: kind.value[2],
     title: title.value,
     topic: label,
     details: msg.value.trim(),
     version: VERSION,
-  })
+  }))
   return `https://github.com/${GH_REPO}/issues/new?${q}`
 }
 
+const kept = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v))
+
 const handOff = (where) => {
-  if (!written.value) return
   const url = linkFor(where)
   route.value = where
   // mailto: through window.open can leave a blank tab behind on some browsers.
@@ -209,8 +218,7 @@ const clean = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/, ''
                 v-for="r in [['github', 'GH', `${GH_REPO}`], ['email', '@', CONTACT_EMAIL]]"
                 :key="r[0]"
                 type="button"
-                :disabled="!written"
-                class="flex items-center gap-[.625rem] rounded-[.7rem] bg-[#17181d] px-[.8rem] py-[.7rem] text-left shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)] transition-[background,box-shadow] enabled:cursor-pointer enabled:hover:bg-[#1c1e23] enabled:hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,.16)] disabled:cursor-not-allowed disabled:opacity-45"
+                class="flex cursor-pointer items-center gap-[.625rem] rounded-[.7rem] bg-[#17181d] px-[.8rem] py-[.7rem] text-left shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)] transition-[background,box-shadow] hover:bg-[#1c1e23] hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,.16)]"
                 @click="handOff(r[0])"
               >
                 <span class="flex size-[1.375rem] shrink-0 items-center justify-center rounded-[.44rem] bg-white/8 font-mono text-[.62rem] font-semibold text-white/72">{{ r[1] }}</span>
