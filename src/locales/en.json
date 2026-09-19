@@ -102,6 +102,7 @@
   },
   "footer": {
     "rights": "© 2026 Token Pacer",
-    "changelog": "Changelog"
+    "changelog": "Changelog",
+    "feedback": "Send feedback"
   }
 }
