@@ -107,21 +107,51 @@
   },
   "feedback": {
     "title": "Send feedback",
-    "blurb": "It goes to the two people who build Token Pacer. No account, no ticket number.",
+    "blurb": "Straight to the two people who build Token Pacer. No account, no ticket number.",
+    "topic": "Topic",
     "kinds": {
-      "broken": "Something's broken",
-      "idea": "An idea",
-      "else": "Anything else"
+      "bug": {
+        "label": "Bug",
+        "subject": "Bug: the panel stays open after a reset"
+      },
+      "idea": {
+        "label": "Idea",
+        "subject": "Idea: per-project budgets"
+      },
+      "question": {
+        "label": "Question",
+        "subject": "Question: how is the weekly cap read?"
+      }
     },
-    "placeholder": "What happened, or what would you change?",
+    "placeholder": "What happened, what you expected, and the steps to get there.",
     "email": "Email, so we can reply",
     "list": "Your address joins the release list. Unsubscribe any time.",
+    "tooLong": "Too long to send from here — take it to GitHub or email below.",
+    "elsewhere": "Or take it elsewhere",
+    "routes": {
+      "github": "GitHub issue",
+      "email": "Email us",
+      "note": "Both open prefilled with what you have typed — GitHub is public and tracked to a release, email is private and takes attachments."
+    },
     "privacy": "Only what you type is sent — nothing is collected from your Mac.",
     "send": "Send",
     "sending": "Sending…",
     "err": "That didn't go through. Try again in a moment.",
-    "sentTitle": "Sent — thank you",
-    "sentBody": "Every message is read by a person. Expect a reply within a few days.",
+    "sent": {
+      "direct": {
+        "title": "Sent — thank you",
+        "note": "Every message is read by a person. Expect a reply within a few days."
+      },
+      "github": {
+        "title": "GitHub is opening",
+        "note": "The issue is prefilled — add screenshots, then post it. Every issue gets read."
+      },
+      "email": {
+        "title": "Your mail app is opening",
+        "note": "The message is prefilled and addressed. Add attachments, then send."
+      }
+    },
+    "signature": "— sent from Token Pacer {version} on macOS",
     "close": "Close feedback"
   }
 }

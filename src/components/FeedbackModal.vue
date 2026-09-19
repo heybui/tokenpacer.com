@@ -1,26 +1,46 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from '../i18n'
-import { MC_ACTION, MC_BOT_FIELD, MC_MAX } from '../site'
+import { CONTACT_EMAIL, GH_REPO, MC_ACTION, MC_BOT_FIELD, MC_MAX, VERSION } from '../site'
 
 const { t } = useI18n()
 const emit = defineEmits(['close'])
 
-// The design's three chips, carrying Mailchimp's MMERGE7 values.
+// key → [Mailchimp MMERGE7 value, GitHub label, title prefix]
 const KINDS = [
-  ['broken', 'bug'],
-  ['idea', 'idea'],
-  ['else', 'question'],
+  ['bug', 'bug', 'bug', 'Bug: '],
+  ['idea', 'idea', 'enhancement', 'Idea: '],
+  ['question', 'question', 'question', 'Question: '],
 ]
 
-const kind = ref('bug')
+const kind = ref(KINDS[0])
+const subj = ref('')
 const msg = ref('')
 const mail = ref('')
 const err = ref('')
 const sending = ref(false)
-const sent = ref(false)
+const route = ref('')
 
-const valid = computed(() => msg.value.trim().length > 3 && /^\S+@\S+\.\S+$/.test(mail.value))
+const written = computed(() => msg.value.trim().length > 3)
+const tooLong = computed(() => msg.value.trim().length > MC_MAX)
+const canSend = computed(() => written.value && !tooLong.value && /^\S+@\S+\.\S+$/.test(mail.value))
+
+const title = computed(() => subj.value.trim() || kind.value[3] + msg.value.trim().split('\n')[0].slice(0, 60))
+const body = computed(() => `${msg.value.trim()}\n\n${t('feedback.signature', { version: VERSION })}`)
+
+const linkFor = (where) =>
+  where === 'email'
+    ? `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`[${t(`feedback.kinds.${kind.value[0]}.label`)}] ${title.value}`)}&body=${encodeURIComponent(body.value)}`
+    : `https://github.com/${GH_REPO}/issues/new?labels=${kind.value[2]}&title=${encodeURIComponent(title.value)}&body=${encodeURIComponent(body.value)}`
+
+const handOff = (where) => {
+  if (!written.value) return
+  const url = linkFor(where)
+  route.value = where
+  // mailto: through window.open can leave a blank tab behind on some browsers.
+  if (where === 'email') window.location.href = url
+  else window.open(url, '_blank', 'noopener')
+}
 
 const onKey = (e) => e.key === 'Escape' && emit('close')
 onMounted(() => {
@@ -32,10 +52,10 @@ onUnmounted(() => {
   document.body.style.overflow = ''
 })
 
-// JSONP, because list-manage sends no CORS headers: a plain fetch cannot read
-// the reply and a plain form POST would navigate away from the page.
+// JSONP, because list-manage sends no CORS headers: a fetch cannot read the
+// reply and a native POST would navigate away from the page.
 const send = () => {
-  if (!valid.value || sending.value) return
+  if (!canSend.value || sending.value) return
   sending.value = true
   err.value = ''
 
@@ -46,21 +66,21 @@ const send = () => {
     script.remove()
     sending.value = false
     if (message) err.value = message
-    else sent.value = true
+    else route.value = 'direct'
   }
 
   window[cb] = (res) => {
-    // "already subscribed" comes back as an error; the message is still lost,
-    // but telling someone their feedback failed is worse than a quiet thanks.
+    // A repeat address comes back as an error and the merge fields are not
+    // updated. Telling someone their feedback failed is worse than a thanks.
     const already = /already subscribed/i.test(res?.msg ?? '')
-    done(res?.result === 'success' || already ? '' : stripTags(res?.msg) || t('feedback.err'))
+    done(res?.result === 'success' || already ? '' : clean(res?.msg) || t('feedback.err'))
   }
   script.onerror = () => done(t('feedback.err'))
 
   const q = new URLSearchParams({
     EMAIL: mail.value.trim(),
-    MMERGE7: kind.value,
-    MMERGE1: msg.value.trim().slice(0, MC_MAX),
+    MMERGE7: kind.value[1],
+    MMERGE1: [subj.value.trim(), msg.value.trim()].filter(Boolean).join(' — ').slice(0, MC_MAX),
     [MC_BOT_FIELD]: '',
     c: cb,
   })
@@ -69,7 +89,7 @@ const send = () => {
 }
 
 // Mailchimp prefixes with the field index ("0 - ...") and marks links up.
-const stripTags = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/, '').trim()
+const clean = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/, '').trim()
 </script>
 
 <template>
@@ -84,13 +104,22 @@ const stripTags = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/
       class="flex max-h-[88vh] w-full max-w-[35rem] animate-fb-in flex-col overflow-hidden rounded-2xl bg-[#131417] shadow-[0_2.5rem_6.25rem_rgba(0,0,0,.66),inset_0_0_0_1px_rgba(255,255,255,.08)]"
       @click.stop
     >
-      <!-- Sent -->
-      <div v-if="sent" class="flex flex-col items-center gap-4 px-7 pt-14 pb-[3.625rem] text-center">
+      <!-- Handed off, or sent -->
+      <div v-if="route" class="flex flex-col items-center gap-4 px-7 pt-14 pb-[3.625rem] text-center">
         <div class="flex size-11 items-center justify-center rounded-full bg-[rgba(62,201,138,.14)] shadow-[inset_0_0_0_1px_rgba(62,201,138,.4)]">
           <span class="block h-2 w-[.94rem] -translate-y-[.19rem] translate-x-[.06rem] -rotate-45 border-b-[2.5px] border-l-[2.5px] border-go" />
         </div>
-        <span class="text-base font-semibold text-white">{{ t('feedback.sentTitle') }}</span>
-        <span class="max-w-[34ch] text-[.82rem] leading-[1.55] text-pretty text-white/55">{{ t('feedback.sentBody') }}</span>
+        <span class="text-base font-semibold text-white">{{ t(`feedback.sent.${route}.title`) }}</span>
+        <span class="max-w-[34ch] text-[.82rem] leading-[1.55] text-pretty text-white/55">{{ t(`feedback.sent.${route}.note`) }}</span>
+        <a
+          v-if="route !== 'direct'"
+          :href="linkFor(route)"
+          :target="route === 'github' ? '_blank' : undefined"
+          rel="noopener"
+          class="font-mono text-[.69rem] text-white/44 underline decoration-white/20 underline-offset-4 transition-colors hover:text-go"
+        >
+          {{ route === 'github' ? `github.com/${GH_REPO}/issues/new` : CONTACT_EMAIL }}
+        </a>
       </div>
 
       <!-- Form -->
@@ -111,32 +140,39 @@ const stripTags = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/
             </button>
           </div>
 
-          <div class="flex flex-wrap gap-[.44rem]">
-            <button
-              v-for="[key, value] in KINDS"
-              :key="value"
-              type="button"
-              class="cursor-pointer rounded-full px-[.875rem] py-[.44rem] text-[.78rem] font-medium whitespace-nowrap transition-colors"
-              :class="kind === value
-                ? 'bg-go text-[#06231a]'
-                : 'bg-transparent text-white/62 shadow-[inset_0_0_0_1px_rgba(255,255,255,.14)] hover:text-white'"
-              @click="kind = value"
-            >
-              {{ t(`feedback.kinds.${key}`) }}
-            </button>
+          <div class="flex flex-col gap-[.56rem]">
+            <span class="font-mono text-[.6rem] tracking-[.12em] text-white/42 uppercase">{{ t('feedback.topic') }}</span>
+            <div class="flex flex-wrap gap-[.44rem]">
+              <button
+                v-for="k in KINDS"
+                :key="k[0]"
+                type="button"
+                class="cursor-pointer rounded-full px-[.875rem] py-[.44rem] text-[.78rem] font-medium whitespace-nowrap transition-colors"
+                :class="kind[0] === k[0]
+                  ? 'bg-go text-[#06231a]'
+                  : 'bg-transparent text-white/62 shadow-[inset_0_0_0_1px_rgba(255,255,255,.14)] hover:text-white'"
+                @click="kind = k"
+              >
+                {{ t(`feedback.kinds.${k[0]}.label`) }}
+              </button>
+            </div>
           </div>
 
-          <div class="flex flex-col gap-[.44rem]">
+          <div class="flex flex-col gap-[.56rem]">
+            <input
+              v-model="subj"
+              type="text"
+              maxlength="90"
+              :placeholder="t(`feedback.kinds.${kind[0]}.subject`)"
+              class="h-10 w-full rounded-[.625rem] border-0 bg-[#17181d] px-[.8rem] font-sans text-[.84rem] font-medium text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.09)] outline-none placeholder:font-normal placeholder:text-white/32 focus:shadow-[inset_0_0_0_1px_rgba(62,201,138,.5)]"
+            />
             <textarea
               v-model="msg"
-              :maxlength="MC_MAX"
+              maxlength="600"
               :placeholder="t('feedback.placeholder')"
-              class="h-[9.375rem] w-full resize-none rounded-[.625rem] border-0 bg-[#17181d] px-[.875rem] py-[.8rem] font-sans text-[.84rem] leading-[1.55] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.09)] outline-none placeholder:text-white/32 focus:shadow-[inset_0_0_0_1px_rgba(62,201,138,.5)]"
+              class="h-[8.25rem] w-full resize-none rounded-[.625rem] border-0 bg-[#17181d] px-[.875rem] py-[.8rem] font-sans text-[.84rem] leading-[1.55] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.09)] outline-none placeholder:text-white/32 focus:shadow-[inset_0_0_0_1px_rgba(62,201,138,.5)]"
             />
-            <span
-              class="self-end font-mono text-[.66rem]"
-              :class="msg.length >= MC_MAX ? 'text-watch' : 'text-white/45'"
-            >{{ msg.length }}/{{ MC_MAX }}</span>
+            <span class="self-end font-mono text-[.66rem]" :class="tooLong ? 'text-watch' : 'text-white/45'">{{ msg.length }} / 600</span>
           </div>
 
           <div class="flex flex-col gap-[.44rem]">
@@ -149,20 +185,45 @@ const stripTags = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/
             <span class="text-[.69rem] leading-[1.4] text-white/40">{{ t('feedback.list') }}</span>
           </div>
 
+          <!-- Or take it elsewhere -->
+          <div class="flex flex-col gap-[.7rem] pt-1">
+            <div class="flex items-center gap-3">
+              <span class="shrink-0 font-mono text-[.6rem] tracking-[.12em] text-white/42 uppercase">{{ t('feedback.elsewhere') }}</span>
+              <span class="h-px flex-1 bg-white/8" />
+            </div>
+            <div class="grid grid-cols-2 gap-[.625rem]">
+              <button
+                v-for="r in [['github', 'GH', `${GH_REPO}`], ['email', '@', CONTACT_EMAIL]]"
+                :key="r[0]"
+                type="button"
+                :disabled="!written"
+                class="flex items-center gap-[.625rem] rounded-[.7rem] bg-[#17181d] px-[.8rem] py-[.7rem] text-left shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)] transition-[background,box-shadow] enabled:cursor-pointer enabled:hover:bg-[#1c1e23] enabled:hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,.16)] disabled:cursor-not-allowed disabled:opacity-45"
+                @click="handOff(r[0])"
+              >
+                <span class="flex size-[1.375rem] shrink-0 items-center justify-center rounded-[.44rem] bg-white/8 font-mono text-[.62rem] font-semibold text-white/72">{{ r[1] }}</span>
+                <span class="flex min-w-0 flex-col gap-[.125rem]">
+                  <span class="text-[.78rem] font-semibold whitespace-nowrap text-white/86">{{ t(`feedback.routes.${r[0]}`) }}</span>
+                  <span class="truncate font-mono text-[.62rem] text-white/44">{{ r[2] }}</span>
+                </span>
+                <span class="ml-auto shrink-0 text-[.75rem] text-white/34">↗</span>
+              </button>
+            </div>
+            <span class="text-[.72rem] leading-[1.5] text-pretty text-white/55">{{ t('feedback.routes.note') }}</span>
+          </div>
+
+          <span v-if="tooLong" class="text-[.72rem] text-watch">{{ t('feedback.tooLong') }}</span>
           <span v-if="err" class="text-[.72rem] text-over-light">{{ err }}</span>
         </div>
 
-        <div
-          class="flex shrink-0 items-center gap-[.875rem] bg-[#17181d] px-[1.625rem] py-[.94rem] shadow-[inset_0_1px_0_rgba(255,255,255,.06)]"
-        >
+        <div class="flex shrink-0 items-center gap-[.875rem] bg-[#17181d] px-[1.625rem] py-[.94rem] shadow-[inset_0_1px_0_rgba(255,255,255,.06)]">
           <span class="min-w-0 flex-1 text-[.72rem] leading-[1.45] text-pretty text-white/62">{{ t('feedback.privacy') }}</span>
           <button
             type="button"
-            :disabled="!valid || sending"
+            :disabled="!canSend || sending"
             class="ml-auto rounded-[.625rem] px-5 py-[.625rem] text-[.84rem] font-semibold whitespace-nowrap transition-colors"
-            :class="valid && !sending
+            :class="canSend && !sending
               ? 'cursor-pointer bg-go text-[#06231a] hover:bg-[#56dfa0]'
-              : 'cursor-not-allowed bg-white/8 text-white/34'"
+              : 'cursor-not-allowed bg-[rgba(62,201,138,.22)] text-white/34'"
             @click="send"
           >
             {{ sending ? t('feedback.sending') : t('feedback.send') }}

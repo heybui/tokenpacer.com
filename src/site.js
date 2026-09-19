@@ -11,4 +11,8 @@ export const MC_ACTION =
 export const MC_BOT_FIELD = 'b_680a3c16f17ebe57f4fc63531_13f604e155'
 // Mailchimp clips a text merge field at 255 bytes, silently.
 export const MC_MAX = 255
+// The hand-off targets. token-pacer is private — a stranger cannot open an
+// issue on a repo they cannot see — so issues land on the public site repo.
+export const GH_REPO = 'heybui/tokenpacer.com'
+export const CONTACT_EMAIL = 'support@tokenpacer.com'
 export const KOFI_URL = 'https://ko-fi.com/'
