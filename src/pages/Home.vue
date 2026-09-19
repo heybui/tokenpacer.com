@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useHead } from '@unhead/vue'
+import FeedbackModal from '../components/FeedbackModal.vue'
 import NotchDemo from '../components/NotchDemo.vue'
 import { useI18n } from '../i18n'
 import { BREW, DOWNLOAD_URL, FILE_SIZE, KOFI_URL, SITE_URL, TALLY_FORM_ID, VERSION } from '../site'
@@ -47,25 +48,7 @@ useHead(
   })),
 )
 
-// Tally's script is fetched on the first click, not on load: nothing
-// third-party runs for someone who only came to read the page.
-const openFeedback = async () => {
-  try {
-    if (!window.Tally) {
-      await new Promise((ok, fail) => {
-        document.head.append(Object.assign(document.createElement('script'), {
-          src: 'https://tally.so/widgets/embed.js',
-          onload: ok,
-          onerror: fail,
-        }))
-      })
-    }
-    window.Tally.openPopup(TALLY_FORM_ID, { layout: 'modal', width: 520 })
-  } catch {
-    // a content blocker ate the script — the hosted form still works
-    window.open(`https://tally.so/r/${TALLY_FORM_ID}`, '_blank', 'noopener')
-  }
-}
+const feedback = ref(false)
 
 const copied = ref(false)
 let reset
@@ -185,12 +168,14 @@ const copyBrew = async () => {
           v-if="TALLY_FORM_ID"
           type="button"
           class="cursor-pointer bg-transparent p-0 font-sans text-[.82rem] text-white/52 transition-colors hover:text-go"
-          @click="openFeedback"
+          @click="feedback = true"
         >
           {{ t('footer.feedback') }}
         </button>
         <a href="#changelog" class="transition-colors hover:text-go">{{ t('footer.changelog') }}</a>
       </nav>
     </footer>
+
+    <FeedbackModal v-if="feedback" @close="feedback = false" />
   </div>
 </template>

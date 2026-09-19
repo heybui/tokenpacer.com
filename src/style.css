@@ -25,6 +25,8 @@
   --animate-glow-go: glow-go 2s ease-in-out infinite;
   --animate-glow-watch: glow-watch 2s ease-in-out infinite;
   --animate-glow-over: glow-over 2s ease-in-out infinite;
+  --animate-fb-fade: fb-fade 180ms ease-out;
+  --animate-fb-in: fb-in 240ms cubic-bezier(.22, 1, .36, 1);
 }
 
 @keyframes cap-in { from { opacity: 0; transform: translateY(.25rem); } to { opacity: 1; transform: none; } }
@@ -73,3 +75,7 @@ html:lang(vi) {
 @keyframes tp-pulse { 0%, 100% { opacity: .3 } 18% { opacity: 1 } }
 @keyframes tp-drip { from { background-position: 0 -120% } to { background-position: 0 220% } }
 @keyframes tp-sweep { from { background-position: -80% 0 } to { background-position: 180% 0 } }
+
+/* The feedback modal, straight off the design board. */
+@keyframes fb-fade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes fb-in { from { opacity: 0; transform: translateY(.875rem) scale(.97) } to { opacity: 1; transform: none } }

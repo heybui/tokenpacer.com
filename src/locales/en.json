@@ -103,6 +103,12 @@
   "footer": {
     "rights": "© 2026 Token Pacer",
     "changelog": "Changelog",
-    "feedback": "Send feedback"
+    "feedback": "Feedback"
+  },
+  "feedback": {
+    "title": "Send feedback",
+    "blurb": "It goes to the two people who build Token Pacer. No account, no ticket number.",
+    "privacy": "Only what you attach is sent — nothing is collected from your Mac.",
+    "close": "Close feedback"
   }
 }
