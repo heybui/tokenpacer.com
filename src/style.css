@@ -57,7 +57,16 @@
   50%      { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .3rem 1.5rem .375rem rgba(226,84,63,.88), inset 0 0 0 1px rgba(255,255,255,.08); }
 }
 
-html { background: var(--color-base); }
+/* macOS paints an expanded scrollbar with a light track unless the page says
+   which scheme it is in — that track was what showed through the modal's
+   rounded corner. Both properties inherit, so this covers every scroller,
+   the textarea included. */
+html {
+  background: var(--color-base);
+  color-scheme: dark;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .24) transparent;
+}
 body { margin: 0; -webkit-font-smoothing: antialiased; }
 
 /* ponytail: Instrument Sans ships latin + latin-ext only, so stacked Vietnamese
