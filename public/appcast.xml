@@ -3,228 +3,27 @@
     <channel>
         <title>TokenPacer</title>
         <item>
-            <title>0.1.0</title>
-            <pubDate>Sat, 19 Sep 2026 21:12:43 +0000</pubDate>
-            <sparkle:version>213</sparkle:version>
-            <sparkle:shortVersionString>0.1.0</sparkle:shortVersionString>
+            <title>1.0.0</title>
+            <pubDate>Sun, 20 Sep 2026 07:38:32 +0000</pubDate>
+            <sparkle:version>220</sparkle:version>
+            <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description><![CDATA[<ul>
-<li>refactor(build): stop attaching the feed to the release</li>
-<li>feat(build): put the changelog in the appcast</li>
-<li>docs: record that Sparkle is vendored</li>
-<li>ci: drop the Sparkle download workarounds</li>
-<li>build: vendor Sparkle rather than fetch it per checkout</li>
-<li>perf(ci): fetch the Sparkle artifact with curl</li>
-<li>ci: tighten the timeouts to what a run costs</li>
-<li>ci: bound every wait this can sit in</li>
-<li>perf(ci): cache the Sparkle binary artifact</li>
-<li>fix(ci): check the credentials before signing anything</li>
-<li>fix: call Data's initializer rather than hand it to map</li>
-<li>chore: drop a binding nothing reads</li>
-<li>fix: compile on a toolchain older than the one this was written on</li>
-<li>fix(ci): build on a runner new enough to compile this</li>
-<li>fix(sources): press return again when codex has not woken up</li>
-<li>ci: cut a release from a macOS runner</li>
-<li>build: sign the Release configuration with the Developer ID</li>
-<li>build: let a runner supply the credentials this reads from a Keychain</li>
-<li>fix(build): sign the image and keep the feed to what ships</li>
-<li>fix(release): serve the appcast and write real notes</li>
-<li>feat!: rework providers, card controls and the Codex panel read</li>
-<li>chore: relicense as proprietary</li>
-<li>docs: replace the plan with a PRD, a spec and a product README</li>
-<li>docs: close the external-display check on the outset light</li>
-<li>fix(design-system): run the shell's light outside its edge</li>
-<li>feat(prefs): show the automatic update check</li>
-<li>refactor: rename the dormant shell to hidden and split the pill's views</li>
-<li>docs: write down what each agent exposes and how it is read</li>
-<li>test(pill): poll for the ghost's withdrawal instead of sleeping</li>
-<li>perf(notch): size the window to the state it draws</li>
-<li>fix(design-system): run the shell's light inside its bottom edge</li>
-<li>fix(prefs): size the settings window to what is in it</li>
-<li>fix(prefs): switch on a provider this install never saw</li>
-<li>feat(sources): read codex's and copilot's own usage panels</li>
-<li>feat(sources): follow each agent's own home override</li>
-<li>docs: write down what running Token Pacer needs</li>
-<li>feat(prefs): register the login item on first launch</li>
-<li>style(panel): shorten the card's hint</li>
-<li>feat(panel): hint the two gestures, and fade the line between them</li>
-<li>feat(panel): say what each figure in the card means</li>
-<li>feat(prefs): put the version and two links in a footer</li>
-<li>fix(prefs): move the glow off the end of its row</li>
-<li>fix(pill): send the left wing to the left gutter</li>
-<li>docs(design-system): drop the dead path from the tokens header</li>
-<li>docs: point the plan at Claude Design, not at a checkout</li>
-<li>feat(pill): draw the count badge the board's own way</li>
-<li>chore: drop the design export, the board lives in Claude Design</li>
-<li>fix(design-system): run the comet and its relatives left to right</li>
-<li>feat(pill)!: count the jobs working, not the sessions waiting</li>
-<li>fix(design-system): stop the glow when another light is chosen</li>
-<li>test(store): cover the session registry and its dead processes</li>
-<li>fix(store): sweep the session registry on the tick as well</li>
-<li>fix(design-system): keep the glow off the top edge too</li>
-<li>fix(design-system): keep the glow outside the panel</li>
-<li>refactor(design-system)!: turn the border's ramp instead of stroking it</li>
-<li>fix(design-system): draw the lights the board's own size</li>
-<li>docs: record the borders, the providers switch and the pane as built</li>
-<li>feat(design-system): draw the other eleven running borders</li>
-<li>feat(prefs): let a provider be turned off</li>
-<li>feat(pill): lead every expanded state with the chosen mark</li>
-<li>fix(pill): anchor the countdown to the end of the row</li>
-<li>feat(prefs): let the menu bar drop the percentage</li>
-<li>docs: record the twelve marks and what drawing them cost</li>
-<li>feat(prefs): add the Appearance pane</li>
-<li>fix(pill): lean the wings towards the notch, not away from it</li>
-<li>feat(design-system): draw the other ten marks</li>
-<li>docs: record the mark seam and the measured flanks</li>
-<li>test: compare the measured digit cell as a float, not as arithmetic</li>
-<li>fix(pill): measure the flanks against the row the view actually draws</li>
-<li>feat(pill): measure the flanks from what is in them</li>
-<li>feat(design-system): add the ring mark, and the seam the other ten arrive at</li>
-<li>perf(design-system): give the marker its creep back, on CoreAnimation</li>
-<li>perf(design-system): stop the marker creeping, and correct yesterday's numbers</li>
-<li>docs: record what phase 5 built and what it cost</li>
-<li>style(pill): open the card's rows from 6pt to 11pt</li>
-<li>style(pill): open the card's columns from 8pt to 14pt</li>
-<li>style(pill): week off the menu bar, back on the card, columns tightened</li>
-<li>style(pill): tighten the card, and drop the week dot from it</li>
-<li>feat(design-system): put the week on the provider's own bar, as a dot</li>
-<li>fix(pill): give the weekly cap back to the provider it belongs to</li>
-<li>feat(pill): fit the drop panel to its content, and add the week to the card</li>
-<li>feat(pill): one row per provider in the hover card</li>
-<li>style(design-system): shorten the mark, and give the marker its creep back</li>
-<li>fix(services): mark the instance lock close-on-exec</li>
-<li>perf(design-system): take the shadow and the creep off the marker</li>
-<li>feat(design-system): draw the capsule bar, and lead the pill with it</li>
-<li>fix(design-system): make the hero's band and panel one width</li>
-<li>revert(pill): keep the band's black, and correct the board</li>
-<li>feat(pill)!: draw the bar row flat, and paint only the panel</li>
-<li>docs: record the Copilot daemon spike, and cut the phase</li>
-<li>docs: separate an assumed plan size from a stated one</li>
-<li>docs(design-system): keep the hollow marker, solid on every capsule bar</li>
-<li>docs(design-system): drop the hollow marker from the board</li>
-<li>fix(pill): show a percentage in every case</li>
-<li>docs: correct what the last three changes left stale in the plan</li>
-<li>docs: record the burn rate's removal</li>
-<li>refactor(engine)!: drop the burn rate</li>
-<li>docs: record the ceiling's deletion and what it cost</li>
-<li>feat(engine)!: drop every percentage the app worked out itself</li>
-<li>docs: take every provider's figure from the provider</li>
-<li>fix(engine): fire the over banner beside a notch in plain sight</li>
-<li>docs: fold the redrawn board and the Copilot source into the plan</li>
-<li>fix(design-system): redraw the app icon on the real zones</li>
-<li>build: regenerate the icns through a target, not by hand</li>
-<li>docs(design-system): reconcile the board with the shipped app</li>
-<li>build: tap from redevify, matching the bundle id</li>
-<li>build: cut releases through a public site and tap</li>
-<li>fix: point the app at tokenpacer.com, not the private repo</li>
-<li>feat(panel): move the pinned header into the band</li>
-<li>fix(pill): stop the shell going see-through as it opens</li>
-<li>style: ask for shapes by name</li>
-<li>refactor(design-system): draw every mono figure through Typography</li>
-<li>refactor(design-system): settle the chasing light on a Task, not a work item</li>
-<li>fix(notch): end the hover at the shell instead of the whole host</li>
-<li>docs: state the Swift and SwiftUI API rules agents must follow</li>
-<li>feat: redraw the app icon as a notch bite over a pace bar</li>
-<li>docs: add the landing page board</li>
-<li>docs: expand the board with preferences, states and border variants</li>
-<li>refactor!: rename the app to Token Pacer</li>
-<li>style(design-system): slow the shell spring and state it as a duration</li>
-<li>fix(pill): stop rebuilding the shell's content on every state change</li>
-<li>fix(notch): size the shell to the menu bar row on every screen</li>
-<li>perf(pill): drop the shadow on the states that fill the menu bar row</li>
-<li>perf(store): stop redoing the same work over every retained event</li>
-<li>fix(engine): track usage that leaves no log on this machine</li>
-<li>perf(sources): gate the log scan on an FSEvents watcher</li>
-<li>perf(design-system): run the light and the breath on CoreAnimation</li>
-<li>feat(menu)!: cut copy-usage and About, and the ellipses with them</li>
-<li>docs: drop cut features from the board and the plan</li>
-<li>feat(menu): add a feedback row linking to the landing page</li>
-<li>feat(notch)!: rebuild the pill around the physical notch</li>
-<li>refactor(engine): drop the percent-per-hour figure</li>
-<li>feat(sources)!: read limits from the CLI /usage panel over a pty</li>
-<li>refactor: put everything the app ships under BurnTracker/</li>
-<li>fix(sources): read utilization as the percentage it is</li>
-<li>revert: restore design/.thumbnail</li>
-<li>refactor: name the source folder for the target it builds</li>
-<li>docs: record the release pipeline and what it is blocked on</li>
-<li>feat: add Sparkle for in-app updates</li>
-<li>build: add the notarized DMG and cask pipeline</li>
-<li>docs: close phase 4 and record what the live machine taught</li>
-<li>fix(engine): stop projecting headroom past its own sample</li>
-<li>refactor(design-system): measure the chase in points, not in path</li>
-<li>fix(engine): follow the turn, not the last line type</li>
-<li>fix(design-system): drive the chase off the clock, not off state</li>
-<li>fix(design-system): make the chase follow the path, not the x axis</li>
-<li>feat(design-system): run a light around the shell while tokens flow</li>
-<li>feat(prefs): scope reset to the threshold scale</li>
-<li>fix(pill): cross-fade the shell's content as it morphs</li>
-<li>feat(prefs): move the threshold legend under the scale it describes</li>
-<li>feat(pill): close three gaps against the design board</li>
-<li>feat: bundle the app icon</li>
-<li>feat(prefs): put both thresholds on the one scale they divide</li>
-<li>feat(prefs): drop the ⌘⇧B row</li>
-<li>fix(prefs): open the settings window in front of the pill</li>
-<li>feat(prefs): add a reset button and fix the window title colour</li>
-<li>feat(prefs): alert on threshold crossings when the notch is hidden</li>
-<li>feat(prefs): add the preferences window and make the thresholds real</li>
-<li>fix(engine): pulse while a turn is in flight, not just after one</li>
-<li>fix(store): archive the last reading, not just the tracker around it</li>
-<li>docs: record the cold-start fix and its measurements</li>
-<li>perf(store): archive events and cursors so a relaunch skips the corpus</li>
-<li>feat(store): archive limits state so it survives a relaunch</li>
-<li>docs: close phase 3, carry persistence into phase 4</li>
-<li>fix(notch): anchor to the notched screen, not the focused one</li>
-<li>fix(pill): track hover on the shell instead of the whole host</li>
-<li>feat(panel): show history as a calendar grid over a quarter</li>
-<li>feat(pill): let the context menu open over the pinned panel</li>
-<li>fix(engine): read spend as minor units in its own currency</li>
-<li>feat(panel): fill the panel with history, dated, and drop the spend cell</li>
-<li>fix(pill): cast the shell shadow from the shape, not the content</li>
-<li>fix(notch): stop the host clipping the shell's shadow</li>
-<li>docs: bring the plan back in line with what shipped</li>
-<li>build: sign the bundle with a stable identity</li>
-<li>fix(engine): stop the activity dot 5s after the last log line</li>
-<li>docs: phase 2 done, phase 3 under way</li>
-<li>fix(design-system): draw the menu on its own dark surface</li>
-<li>fix(pill): keep the activity dot beside the countdown when expanded</li>
-<li>feat(pill): open the design's context menu on right-click</li>
-<li>refactor(design-system): move Format out of UsageRing into its own file</li>
-<li>feat(panel): open the pinned panel on click, close it on ✕ or Esc</li>
-<li>feat(engine): carry monthly credit spend through to the snapshot</li>
-<li>feat(engine): fold events into the panel's sparkline, splits and history</li>
-<li>feat(pill): expand the warning card at the critical threshold</li>
-<li>feat(design-system): add the cap bar and the hover card's weekly row</li>
-<li>feat(design-system): bundle and register instrument sans</li>
-<li>feat(design-system): pulse the activity dot while the logs grow</li>
-<li>feat(design-system): roll odometer digits instead of swapping them</li>
-<li>feat(pill): resolve all eight states from one function</li>
-<li>fix(pill): say how old a reported figure is</li>
-<li>fix(store): keep reporting the real figure across a window reset</li>
-<li>feat: log the usage request path with os.Logger</li>
-<li>docs: record phase progress against what is actually built</li>
-<li>fix(pill): cast the shadow from the rounded shape</li>
-<li>fix(engine): stop headroom outlasting the window it sits next to</li>
-<li>feat(app): refuse to start a second instance</li>
-<li>feat(store): anchor claude limits from the usage endpoint</li>
-<li>feat(services): read the claude code oauth token from the keychain</li>
-<li>feat(sources): add the claude usage endpoint client</li>
-<li>feat(pill): flag unconfirmed usage with an attention badge</li>
-<li>feat(engine): gate usage requests on local activity</li>
-<li>build: exclude test fixtures from the test target</li>
-<li>feat(engine): calibrate utilization from anchors, poll every 10 minutes</li>
-<li>docs: correct the limits source to the oauth usage endpoint</li>
-<li>fix(pill): put the figure inside the hover ring, per the design</li>
-<li>fix(store): keep one error per source</li>
-<li>test(ingest): cover incremental JSONL reading</li>
-<li>feat(pill): show live usage in the collapsed and hover states</li>
-<li>feat(core): read claude and codex logs, infer the 5-hour window</li>
-<li>feat(notch): pin a borderless panel to the notch with click passthrough</li>
-<li>build: add xcode project, spm package and app bundling</li>
-<li>docs: add design handoff bundle, plan and agent rules</li>
+            <description><![CDATA[<p>👋 <strong>Hello, world!</strong> Token Pacer 1.0 is here.</p>
+<p>You run Claude Code, Codex and Copilot all day. Each has its own quota, on its own clock. To check one, you stop and ask. So you find out you were at 94% when it tells you 100% — always at the wrong moment.</p>
+<p>Now the notch just tells you. 🎉</p>
+<h3>✨ What it does</h3>
+<ul>
+<li>📊 One mark, one number, one countdown — in the menu bar, all day.</li>
+<li>🖱️ Hover to see all three side by side. Double-click to pin the history, the splits and a sparkline.</li>
+<li>🚨 One alert when you go over. Once. The amber zone stays quiet.</li>
+<li>🎨 Twelve marks and twelve running borders to pick from.</li>
 </ul>
-]]></description>
-            <enclosure url="https://github.com/heybui/tokenpacer.com/releases/download/v0.1.0/TokenPacer-0.1.0.dmg" length="2795975" type="application/octet-stream" sparkle:edSignature="Dbt5JcMmKEaXOeUHw2C+aWY0m1FRcfFYQ8NMCvVgRgEa+hbHYRZ3DPllEg3yqK99KTFgJ4g2hh+qNzcokxvMBw=="/>
+<h3>🚀 Get it</h3>
+<p>Download the disk image below. You need macOS 15, an Apple silicon Mac, and one of the CLIs installed and signed in.</p>
+<p>To read a usage screen, the app runs your CLI inside one of your trusted projects — so macOS asks once for that folder.</p>
+<p>💬 Tell me what breaks: <a href="https://tokenpacer.com/#feedback" rel="nofollow">https://tokenpacer.com/#feedback</a></p>]]></description>
+            <enclosure url="https://github.com/heybui/tokenpacer.com/releases/download/v1.0.0/TokenPacer-1.0.0.dmg" length="2791827" type="application/octet-stream" sparkle:edSignature="gXIa+bHC6CbEdyOgFjGiYeuuhhfD6Ws9GgA0HU3U4MTRqaYCJjBNzbYYqAZ9+jahF4qxkvlib2/TyWbp1fA1CA=="/>
         </item>
     </channel>
 </rss>
