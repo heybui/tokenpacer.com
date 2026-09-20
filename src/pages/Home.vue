@@ -5,7 +5,7 @@ import ChangelogModal from '../components/ChangelogModal.vue'
 import FeedbackModal from '../components/FeedbackModal.vue'
 import NotchDemo from '../components/NotchDemo.vue'
 import { useI18n } from '../i18n'
-import { DOWNLOAD_URL, GH_REPO, SITE_URL, VERSION } from '../site'
+import { COFFEE_URL, DOWNLOAD_URL, GH_REPO, SITE_URL, VERSION } from '../site'
 
 const { t } = useI18n()
 
@@ -183,6 +183,20 @@ onMounted(async () => {
                 <rect x="1" y="12" width="12" height="2" rx="1" />
               </svg>
               {{ t('cta.download') }}
+            </a>
+
+            <a
+              :href="COFFEE_URL"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-[.55rem] rounded-[.625rem] bg-bmc px-[1.375rem] py-[.8rem] text-[.97rem] font-semibold whitespace-nowrap text-[#0b0b0d] transition-colors hover:bg-[#ffe75c]"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true" class="size-[.9rem] shrink-0">
+                <path fill="currentColor" d="M1.6 6.2h9v3.9a3.1 3.1 0 0 1-3.1 3.1H4.7a3.1 3.1 0 0 1-3.1-3.1V6.2Z" />
+                <path fill="none" stroke="currentColor" stroke-width="1.3" d="M10.9 7.5h1.4a1.6 1.6 0 0 1 0 3.2h-1.4" />
+                <path fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" d="M4.2 1.7v1.5M6.6 1.3v1.9M9 1.7v1.5" />
+              </svg>
+              {{ t('cta.coffee') }}
             </a>
           </div>
         </div>

@@ -17,4 +17,4 @@ export const MC_MAX = 255
 // issue on a repo they cannot see — so issues land on the public site repo.
 export const GH_REPO = 'heybui/tokenpacer.com'
 export const CONTACT_EMAIL = 'support@tokenpacer.com'
-export const KOFI_URL = 'https://ko-fi.com/'
+export const COFFEE_URL = 'https://buymeacoffee.com/heybui'

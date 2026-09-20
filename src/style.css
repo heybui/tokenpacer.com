@@ -15,6 +15,9 @@
   --color-over: #e2543f;
   --color-over-light: #f4ab9e;
   --color-info: #5aa9d6;
+  /* Buy Me a Coffee's own yellow. Their embed script would bring Comic Sans
+     and a hard black outline with it, so only the colour is borrowed. */
+  --color-bmc: #ffdd00;
   --color-panel: #17181c;
   --color-sunken: #14151a;
 
