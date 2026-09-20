@@ -1,27 +1,32 @@
-# Token Pacer — website
+# tokenpacer.com
+
+The website for [Token Pacer](https://tokenpacer.com) — a macOS app that keeps your
+Claude Code, Codex and Copilot usage in the notch.
 
 Vue 3 + Vite + Tailwind v4, prerendered to static HTML by `vite-ssg`.
 
 ```sh
 npm install
-npm run dev      # local
-npm run build    # → dist/  (index.html = en, vi.html = vi)
+npm run dev
+npm run build    # → dist/
 npm run preview
+npm test         # the release-notes parser
 ```
 
-## How it is wired
+## Where things are
 
-- **SEO** — every route is prerendered, so the markup is in the HTML source. Per-page
-  title/description/OG/canonical/hreflang and the `SoftwareApplication` JSON-LD come from
-  `useHead` in `src/pages/Home.vue`. `public/robots.txt` and `public/sitemap.xml` are static.
-  Change the domain in one place: `src/site.js` (and the two static files).
-- **i18n** — `src/locales/*.json` plus a ~15-line `useI18n()` in `src/i18n.js`. The default
-  locale owns `/`, every other locale gets `/<locale>`. Adding a locale = one JSON file; the
-  route and the hreflang tags follow from `locales`.
-- **Design tokens** — `src/style.css` `@theme` block. The tone rule (green < 75, amber 75–90,
-  red > 90) matches the app's `DesignSystem/Tokens.swift`.
-- **Sizing** — Tailwind's rem scale throughout; no px chased from the mock.
-- **Performance** — self-hosted variable font, critical CSS inlined by `beasties`, no runtime
-  i18n library, one image (the app icon).
+| | |
+|---|---|
+| `src/pages/Home.vue` | the whole page, and `useHead` for title, OG and JSON-LD |
+| `src/components/` | the notch demo, and the feedback and changelog modals |
+| `src/locales/en.json` | every string on the page |
+| `src/site.js` | domain, repo, contact — change them here, not inline |
+| `src/style.css` | design tokens; the tone rule matches the app's |
 
-Deploy: any static host. Publish `dist/`, no build-time env needed.
+## Notes
+
+- **Releases live in this repo.** The app itself is private, so its DMGs and the
+  Sparkle appcast (`public/appcast.xml`) are published from here.
+- **The changelog modal reads the latest release** from the GitHub API and parses
+  its body, so editing release notes needs no redeploy.
+- **Deploy** is GitHub Pages on every push to `main`. No build-time env.
