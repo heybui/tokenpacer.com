@@ -1,14 +1,20 @@
 {
   "meta": {
     "title": "Token Pacer — never hit the cap by surprise",
-    "description": "Claude Code, Codex and Copilot quotas live in your Mac's notch. Real numbers, straight from each provider. No account, no API key, no permissions."
+    "description": "Claude Code, Codex and Copilot quotas live in your Mac's notch. Real numbers, straight from each provider. No account, no API key, no permissions.",
+    "ogAlt": "Token Pacer — a green-to-red usage scale at 62%, with 2h 14m to reset."
   },
   "nav": {
     "skip": "Skip to content"
   },
   "hero": {
     "eyebrow": "For macOS · lives in the notch",
-    "headline": "Never hit the cap by surprise",
+    "headlines": [
+      "Never hit the cap by surprise",
+      "Stop finding out at 100%",
+      "Never get cut off mid-task",
+      "Know before you're cut off"
+    ],
     "sub": "You find out you were at 94% by being told you're at 100% — mid-task, on the afternoon it matters. Token Pacer keeps Claude Code, Codex and Copilot in front of you all day, so you never have to ask."
   },
   "features": [
@@ -22,7 +28,7 @@
     },
     {
       "label": "Real numbers only",
-      "note": "Every figure is the provider's own. Never an estimate, never a guess."
+      "note": "Every figure is the provider's own — reported, never inferred. Never an estimate, never a guess."
     },
     {
       "label": "Nothing to sign into",
@@ -40,7 +46,6 @@
   "cta": {
     "download": "Download for macOS",
     "kofi": "Support on Ko-fi",
-    "requirements": "Free · {version} · {size} · Apple silicon, macOS 15+",
     "copy": "Copy",
     "copied": "Copied",
     "copyHint": "Copy the Homebrew command"
@@ -94,12 +99,25 @@
   },
   "footer": {
     "rights": "© 2026 Token Pacer",
+    "by": "@{user}",
     "changelog": "Changelog",
     "feedback": "Feedback"
   },
+  "changelog": {
+    "title": "Changelog",
+    "blurb": "What shipped in the latest release.",
+    "loading": "Reading the releases…",
+    "empty": "Nothing released yet.",
+    "err": "Couldn't reach GitHub just now —",
+    "all": "read the releases there",
+    "viewAll": "All releases",
+    "auto": "Updates install themselves",
+    "done": "Done",
+    "close": "Close changelog"
+  },
   "feedback": {
-    "title": "Send feedback",
-    "blurb": "Straight to the person who builds it. No account, no ticket.",
+    "title": "Let's make it better",
+    "blurb": "Thank you for using it — your feedback shapes what ships next",
     "topic": "Topic",
     "kinds": {
       "bug": {
@@ -138,7 +156,6 @@
         "note": "Read by the person who builds it. Expect a reply within a few days."
       }
     },
-    "signature": "— sent from Token Pacer {version} on macOS",
     "close": "Close feedback",
     "labels": {
       "subject": "Subject",

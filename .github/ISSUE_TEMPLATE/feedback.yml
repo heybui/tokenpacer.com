@@ -35,17 +35,3 @@ body:
         Drag images or a screen recording straight into this box — GitHub uploads them and leaves a link behind.
         A shot of the notch is worth a paragraph. Skip it if it doesn't apply.
       placeholder: Drop files here.
-
-  - type: input
-    id: version
-    attributes:
-      label: Token Pacer version
-      placeholder: v1.0.0
-    validations:
-      required: true
-
-  - type: input
-    id: macos
-    attributes:
-      label: macOS version
-      placeholder: 15.6 (Sequoia)

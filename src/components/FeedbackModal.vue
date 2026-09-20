@@ -1,7 +1,8 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
+import ModalShell from './ModalShell.vue'
 import { useI18n } from '../i18n'
-import { CONTACT_EMAIL, GH_REPO, MC_ACTION, MC_BOT_FIELD, MC_MAX, VERSION } from '../site'
+import { CONTACT_EMAIL, GH_REPO, MC_ACTION, MC_BOT_FIELD, MC_MAX } from '../site'
 
 const { t } = useI18n()
 const emit = defineEmits(['close'])
@@ -40,7 +41,6 @@ const issueUrl = () => {
     title: title.value,
     topic: t(`feedback.kinds.${kind.value[0]}.label`),
     details: msg.value.trim(),
-    version: VERSION,
   }))
   return `https://github.com/${GH_REPO}/issues/new?${q}`
 }
@@ -71,16 +71,7 @@ const handOff = async (where) => {
   say('email', t(copied ? 'feedback.routes.copied' : 'feedback.routes.copyFail'))
 }
 
-const onKey = (e) => e.key === 'Escape' && emit('close')
-onMounted(() => {
-  window.addEventListener('keydown', onKey)
-  document.body.style.overflow = 'hidden'
-})
-onUnmounted(() => {
-  window.removeEventListener('keydown', onKey)
-  document.body.style.overflow = ''
-  clearTimeout(clear)
-})
+onUnmounted(() => clearTimeout(clear))
 
 // JSONP, because list-manage sends no CORS headers: a fetch cannot read the
 // reply and a native POST would navigate away from the page.
@@ -123,17 +114,8 @@ const clean = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/, ''
 </script>
 
 <template>
-  <div
-    class="fixed inset-0 z-20 flex animate-fb-fade items-center justify-center overflow-y-auto bg-[rgba(6,7,9,.72)] p-6 backdrop-blur-[6px]"
-    @click="emit('close')"
-  >
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="fb-title"
-      class="flex max-h-[88vh] w-full max-w-[35rem] animate-fb-in flex-col overflow-hidden rounded-2xl bg-[#131417] shadow-[0_2.5rem_6.25rem_rgba(0,0,0,.66),inset_0_0_0_1px_rgba(255,255,255,.08)]"
-      @click.stop
-    >
+  <ModalShell @close="emit('close')">
+    <template #default="{ titleId }">
       <!-- Handed off, or sent -->
       <div v-if="route" class="flex flex-col items-center gap-4 px-7 pt-14 pb-[3.625rem] text-center">
         <div class="flex size-11 items-center justify-center rounded-full bg-[rgba(62,201,138,.14)] shadow-[inset_0_0_0_1px_rgba(62,201,138,.4)]">
@@ -145,10 +127,10 @@ const clean = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/, ''
 
       <!-- Form -->
       <template v-else>
-        <div class="flex min-h-0 flex-1 flex-col gap-[1.125rem] overflow-y-auto px-[1.625rem] pt-[1.625rem] pb-5">
+        <div class="flex min-h-0 flex-1 flex-col gap-[1.125rem] overflow-y-auto px-[1.625rem] pt-[1.625rem] pb-5 [&>*]:shrink-0">
           <div class="flex items-start gap-[.875rem]">
             <div class="flex min-w-0 flex-col gap-[.3rem]">
-              <span id="fb-title" class="text-[1.06rem] font-semibold tracking-[-.015em] text-white">{{ t('feedback.title') }}</span>
+              <span :id="titleId" class="text-[1.06rem] font-semibold tracking-[-.015em] text-white">{{ t('feedback.title') }}</span>
               <span class="text-[.82rem] leading-[1.5] text-balance text-white/55">{{ t('feedback.blurb') }}</span>
             </div>
             <button
@@ -276,6 +258,6 @@ const clean = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/, ''
           </button>
         </div>
       </template>
-    </div>
-  </div>
+    </template>
+  </ModalShell>
 </template>

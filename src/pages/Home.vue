@@ -1,12 +1,16 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useHead } from '@unhead/vue'
+import ChangelogModal from '../components/ChangelogModal.vue'
 import FeedbackModal from '../components/FeedbackModal.vue'
 import NotchDemo from '../components/NotchDemo.vue'
 import { useI18n } from '../i18n'
-import { DOWNLOAD_URL, FILE_SIZE, SITE_URL, VERSION } from '../site'
+import { DOWNLOAD_URL, GH_REPO, SITE_URL, VERSION } from '../site'
 
 const { t } = useI18n()
+
+// The repo owner is the profile — one handle to change, not two.
+const ghUser = GH_REPO.split('/')[0]
 
 const DOTS = ['#3ec98a', '#3ec98a', '#e8b33c', '#5aa9d6', '#e8b33c', '#3ec98a']
 const features = computed(() => t('features').map((f, i) => ({ ...f, c: DOTS[i] })))
@@ -22,9 +26,16 @@ useHead(
       { property: 'og:title', content: t('meta.title') },
       { property: 'og:description', content: t('meta.description') },
       { property: 'og:url', content: SITE_URL },
-      { property: 'og:image', content: `${SITE_URL}/icon-512.png` },
+      // 1200x630 JPEG: the one format every unfurler renders. WebP is smaller
+      // but X and parts of Slack show nothing for it.
+      { property: 'og:image', content: `${SITE_URL}/og.jpg` },
+      { property: 'og:image:type', content: 'image/jpeg' },
+      { property: 'og:image:width', content: '1200' },
+      { property: 'og:image:height', content: '630' },
+      { property: 'og:image:alt', content: t('meta.ogAlt') },
       { property: 'og:locale', content: 'en_US' },
       { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:image', content: `${SITE_URL}/og.jpg` },
     ],
     link: [
       { rel: 'canonical', href: SITE_URL },
@@ -60,6 +71,29 @@ onMounted(() => {
   window.addEventListener('hashchange', readHash)
 })
 onUnmounted(() => window.removeEventListener('hashchange', readHash))
+
+// The headline rotates through the variants. A transition rather than an
+// infinite keyframe: it paints for ~200ms per swap and the page idles between,
+// instead of keeping the compositor awake the way a looping animation would.
+const headlines = computed(() => t('hero.headlines'))
+const hi = ref(0)
+const fading = ref(false)
+let rotate, swap
+onMounted(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  rotate = setInterval(() => {
+    if (document.hidden) return
+    fading.value = true
+    swap = setTimeout(() => {
+      hi.value = (hi.value + 1) % headlines.value.length
+      fading.value = false
+    }, 220)
+  }, 4200)
+})
+onUnmounted(() => {
+  clearInterval(rotate)
+  clearTimeout(swap)
+})
 
 // The appcast CI rewrites each release is the only place the current DMG is
 // named, so read the button's target from it instead of hardcoding a filename
@@ -118,8 +152,11 @@ onMounted(async () => {
           <div class="flex flex-col gap-[.875rem]">
             <div class="@container flex flex-col gap-[.7rem]">
               <span class="font-mono text-[.78rem] font-medium tracking-[.14em] text-white/48 uppercase">{{ t('hero.eyebrow') }}</span>
-              <h1 class="m-0 text-[min(2.875rem,6.55cqw)] leading-[1.1] font-semibold tracking-[-.03em] whitespace-nowrap">
-                {{ t('hero.headline') }}
+              <h1
+                class="m-0 text-[min(2.875rem,6.55cqw)] leading-[1.1] font-semibold tracking-[-.03em] whitespace-nowrap transition-opacity duration-200"
+                :class="fading && 'opacity-0'"
+              >
+                {{ headlines[hi] }}
               </h1>
             </div>
             <p class="m-0 max-w-[46ch] text-[1.08rem] leading-[1.55] text-balance text-white/62">{{ t('hero.sub') }}</p>
@@ -135,22 +172,18 @@ onMounted(async () => {
             </li>
           </ul>
 
-          <div class="flex flex-col gap-[.875rem]">
-            <div class="flex flex-wrap items-center gap-3">
-              <a
-                :href="dmg"
-                class="inline-flex items-center gap-[.55rem] rounded-[.625rem] bg-go px-[1.375rem] py-[.8rem] text-[.97rem] font-semibold whitespace-nowrap text-[#06231a] transition-colors hover:bg-[#56dfa0]"
-              >
-                <svg viewBox="0 0 14 14" aria-hidden="true" class="size-[.875rem] shrink-0 fill-current">
-                  <rect x="6" y="0" width="2" height="7" rx="1" />
-                  <path d="M2 6h10L7 11z" />
-                  <rect x="1" y="12" width="12" height="2" rx="1" />
-                </svg>
-                {{ t('cta.download') }}
-              </a>
-            </div>
-
-            <span class="font-mono text-[.82rem] text-white/58">{{ t('cta.requirements', { version: VERSION, size: FILE_SIZE }) }}</span>
+          <div class="flex flex-wrap items-center gap-3">
+            <a
+              :href="dmg"
+              class="inline-flex items-center gap-[.55rem] rounded-[.625rem] bg-go px-[1.375rem] py-[.8rem] text-[.97rem] font-semibold whitespace-nowrap text-[#06231a] transition-colors hover:bg-[#56dfa0]"
+            >
+              <svg viewBox="0 0 14 14" aria-hidden="true" class="size-[.875rem] shrink-0 fill-current">
+                <rect x="6" y="0" width="2" height="7" rx="1" />
+                <path d="M2 6h10L7 11z" />
+                <rect x="1" y="12" width="12" height="2" rx="1" />
+              </svg>
+              {{ t('cta.download') }}
+            </a>
           </div>
         </div>
 
@@ -158,14 +191,26 @@ onMounted(async () => {
       </div>
     </main>
 
-    <footer class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-[2.125rem] pt-[1.125rem] pb-7 text-[.82rem] text-white/52">
-      <span>{{ t('footer.rights') }}</span>
-      <nav class="flex items-center gap-4">
+    <footer class="grid grid-cols-1 items-center justify-items-center gap-2 px-[2.125rem] pt-[1.125rem] pb-7 text-[.82rem] text-white/52 sm:grid-cols-3">
+      <span class="sm:justify-self-start">{{ t('footer.rights') }}</span>
+      <a
+        :href="`https://github.com/${ghUser}`"
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-[.35rem] transition-colors hover:text-go"
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true" class="size-[.88rem] shrink-0 fill-current">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+        </svg>
+        {{ t('footer.by', { user: ghUser }) }}
+      </a>
+      <nav class="flex items-center gap-4 sm:justify-self-end">
         <a href="#feedback" class="transition-colors hover:text-go">{{ t('footer.feedback') }}</a>
         <a href="#changelog" class="transition-colors hover:text-go">{{ t('footer.changelog') }}</a>
       </nav>
     </footer>
 
     <FeedbackModal v-if="hash === 'feedback'" @close="close" />
+    <ChangelogModal v-if="hash === 'changelog'" @close="close" />
   </div>
 </template>
