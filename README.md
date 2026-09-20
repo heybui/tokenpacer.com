@@ -1,27 +1,7 @@
 # tokenpacer.com
 
 The website for [Token Pacer](https://tokenpacer.com) — a macOS app that keeps your
-Claude Code, Codex and Copilot usage in the notch.
-
-Vue 3 + Vite + Tailwind v4, prerendered to static HTML by `vite-ssg`.
-
-```sh
-npm install
-npm run dev
-npm run build    # → dist/
-npm run preview
-npm test         # the release-notes parser
-```
-
-## Where things are
-
-| | |
-|---|---|
-| `src/pages/Home.vue` | the whole page, and `useHead` for title, OG and JSON-LD |
-| `src/components/` | the notch demo, and the feedback and changelog modals |
-| `src/locales/en.json` | every string on the page |
-| `src/site.js` | domain, repo, contact — change them here, not inline |
-| `src/style.css` | design tokens; the tone rule matches the app's |
+AI Providers (Claude Code, Codex, Copilot and more) usage in the notch.
 
 ## Notes
 
