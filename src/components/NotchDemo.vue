@@ -150,12 +150,14 @@ const fmtClock = () => {
 }
 
 // Any always-on animation keeps the compositor producing frames, so the only
-// way the page goes idle is for every one of them to stop. Off-screen or in a
-// background tab nobody is watching, so stop them there.
+// way the page goes idle is for every one of them to stop. Off-screen, in a
+// background tab, or behind another app nobody is watching, so stop there.
+// hasFocus() is the case the other two miss: an unfocused window is still
+// visible and still not hidden, so only blur/focus report it.
 const root = ref(null)
 const asleep = ref(false)
 const offscreen = ref(false)
-const refresh = () => (asleep.value = offscreen.value || document.hidden)
+const refresh = () => (asleep.value = offscreen.value || document.hidden || !document.hasFocus())
 
 let cycle, tick, io
 onMounted(() => {
@@ -167,12 +169,16 @@ onMounted(() => {
   io = new IntersectionObserver(([e]) => { offscreen.value = !e.isIntersecting; refresh() })
   io.observe(root.value)
   document.addEventListener('visibilitychange', refresh)
+  addEventListener('blur', refresh)
+  addEventListener('focus', refresh)
 })
 onUnmounted(() => {
   clearInterval(cycle)
   clearInterval(tick)
   io?.disconnect()
   document.removeEventListener('visibilitychange', refresh)
+  removeEventListener('blur', refresh)
+  removeEventListener('focus', refresh)
 })
 </script>
 

@@ -50,8 +50,12 @@
   100% { transform: translate3d(-3%, -4%, 0); }
 }
 
-/* Nothing to watch: park every animation in the subtree. */
-.demo-asleep, .demo-asleep *, .demo-asleep *::before, .demo-asleep *::after {
+/* Nothing to watch: park every animation in the subtree. .page-idle is set by
+   App.vue when the tab is hidden OR the window loses focus — an unfocused
+   window stays on screen, so without it the compositor keeps producing frames
+   behind whatever you switched to. */
+.demo-asleep, .demo-asleep *, .demo-asleep *::before, .demo-asleep *::after,
+.page-idle *, .page-idle *::before, .page-idle *::after {
   animation-play-state: paused !important;
 }
 
