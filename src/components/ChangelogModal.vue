@@ -31,9 +31,6 @@ onMounted(async () => {
     release.value = {
       v: r.tag_name || r.name,
       date: r.published_at ? day.format(new Date(r.published_at)) : '',
-      // A body that skipped the template has no sections — drop the tag column
-      // rather than rule an empty gutter down the whole release.
-      tagged: notes.items.some((it) => it.tag),
       ...notes,
     }
     state.value = 'ok'
@@ -42,10 +39,15 @@ onMounted(async () => {
   }
 })
 
-// The sections RELEASE_NOTES.md names, in the app's own tones. Anything else
-// the notes invent reads neutral rather than guessing at a colour.
+// The sections RELEASE_NOTES.md names by example, in the app's own tones. Notes
+// are free to invent their own — emoji and all — and those read neutral rather
+// than have a colour guessed for them.
 const TONE = { new: 'text-go', fixed: 'text-info', 'heads up': 'text-watch' }
-const tone = (tag) => TONE[tag.toLowerCase()] ?? 'text-white/45'
+const tone = (tag) => TONE[tag.toLowerCase().replace(/[^a-z ]/g, '').trim()] ?? 'text-white/45'
+
+// The notes are told to use absolute https links, so a bare URL is expected and
+// should be clickable. Split rather than v-html: no markup reaches the DOM.
+const parts = (text) => text.split(/(https?:\/\/[^\s<>()]+[^\s<>().,;:!?])/g)
 </script>
 
 <template>
@@ -68,7 +70,7 @@ const tone = (tag) => TONE[tag.toLowerCase()] ?? 'text-white/45'
 
       <!-- [&>*]:shrink-0 — a flex column shrinks its children by default, so a
            long release would be squashed and clipped instead of scrolled. -->
-      <div class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-[1.375rem] pb-5 [&>*]:shrink-0">
+      <div class="flex min-h-0 flex-1 flex-col gap-[1.125rem] overflow-y-auto px-[1.375rem] pb-5 [&>*]:shrink-0">
         <p v-if="state !== 'ok'" class="m-0 text-[.78rem] leading-[1.5] text-white/50">
           {{ t(`changelog.${state}`) }}
           <a v-if="state === 'err'" :href="RELEASES_URL" target="_blank" rel="noopener" class="text-go underline underline-offset-2">
@@ -89,15 +91,27 @@ const tone = (tag) => TONE[tag.toLowerCase()] ?? 'text-white/45'
             {{ release.lede }}
           </p>
 
-          <div v-if="release.items.length" class="flex flex-col gap-px overflow-hidden rounded-[.625rem] bg-white/5">
-            <div
-              v-for="(it, n) in release.items"
-              :key="n"
-              class="grid items-baseline gap-[.625rem] bg-[#17181d] px-[.8rem] py-[.7rem]"
-              :class="release.tagged ? 'grid-cols-[4.125rem_1fr]' : 'grid-cols-1'"
-            >
-              <span v-if="release.tagged" class="font-mono text-[.6rem] tracking-[.1em] uppercase" :class="tone(it.tag)">{{ it.tag }}</span>
-              <span class="text-[.78rem] leading-[1.5] text-pretty text-white/72">{{ it.text }}</span>
+          <!-- The section name is a heading, not a column: notes name their own
+               sections, and "What it does" never fit a 4rem tag gutter. -->
+          <div v-for="(sec, si) in release.sections" :key="si" class="flex flex-col gap-[.44rem]">
+            <span v-if="sec.tag" class="font-mono text-[.6rem] tracking-[.12em] uppercase" :class="tone(sec.tag)">{{ sec.tag }}</span>
+            <div class="flex flex-col gap-px overflow-hidden rounded-[.625rem] bg-white/5">
+              <p
+                v-for="(text, n) in sec.items"
+                :key="n"
+                class="m-0 bg-[#17181d] px-[.8rem] py-[.7rem] text-[.78rem] leading-[1.5] text-pretty text-white/72"
+              >
+                <template v-for="(bit, b) in parts(text)" :key="b">
+                  <a
+                    v-if="/^https?:\/\//.test(bit)"
+                    :href="bit"
+                    target="_blank"
+                    rel="noopener"
+                    class="break-all text-go underline underline-offset-2 hover:text-go-light"
+                  >{{ bit }}</a>
+                  <template v-else>{{ bit }}</template>
+                </template>
+              </p>
             </div>
           </div>
         </template>

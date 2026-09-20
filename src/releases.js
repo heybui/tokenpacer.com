@@ -1,8 +1,8 @@
-// A release body is written to the token-pacer repo's docs/RELEASE_NOTES.md
-// template: one bold lede line, then `### New` / `### Fixed` bullet lists. The
+// A release body follows the token-pacer repo's docs/RELEASE_NOTES.md template:
+// a lede line, then `### <section>` blocks of bullets or short paragraphs. The
 // changelog renders that shape, so parse it rather than render markdown — a
-// renderer is a dependency plus an HTML-injection surface for one heading and
-// one list level.
+// renderer is a dependency plus an HTML-injection surface for one heading level
+// and one list level.
 const inline = (s) =>
   s
     .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
@@ -11,38 +11,46 @@ const inline = (s) =>
     .trim()
 
 export function parseNotes(body) {
-  const items = []
+  const sections = []
   let lede = ''
-  let section = ''
-  let open = null // the bullet a wrapped line continues
+  let current = null // the section being filled
+  let open = -1 // index of the item a wrapped line continues, -1 when closed
+
+  const section = (tag) => {
+    current = { tag, items: [] }
+    sections.push(current)
+    open = -1
+  }
+  const push = (text) => {
+    if (!current) section('')
+    open = current.items.push(text) - 1
+  }
 
   for (const raw of String(body ?? '').split('\n')) {
     const line = raw.trim()
-    if (!line) continue
+    // A blank line ends the paragraph, so the next one starts its own item
+    // rather than running on from it.
+    if (!line) {
+      open = -1
+      continue
+    }
 
     const head = line.match(/^#{1,6}\s+(.*)$/)
     if (head) {
-      section = inline(head[1])
-      open = null
+      section(inline(head[1]))
       continue
     }
 
     const bullet = line.match(/^[-*+]\s+(.*)$/)
     if (bullet) {
-      items.push((open = { tag: section, text: inline(bullet[1]) }))
+      push(inline(bullet[1]))
       continue
     }
 
     const text = inline(line)
-    if (open) open.text += ' ' + text
-    else if (section) items.push((open = { tag: section, text }))
-    else if (!lede) lede = text
-    // A paragraph before any heading that is not the lede is a `**Heads up:**`
-    // style aside — its own prefix is the tag.
-    else {
-      const aside = text.match(/^([A-Z][\w ]{0,14}):\s*(.+)$/)
-      items.push((open = aside ? { tag: aside[1], text: aside[2] } : { tag: '', text }))
-    }
+    if (open >= 0) current.items[open] += ' ' + text // a wrapped line
+    else if (!lede && !current) lede = text
+    else push(text)
   }
-  return { lede, items }
+  return { lede, sections }
 }
