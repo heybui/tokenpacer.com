@@ -54,3 +54,18 @@ export function parseNotes(body) {
   }
   return { lede, sections }
 }
+
+// The appcast Sparkle updates from is also the only place the shipped build is
+// named, so the page reads its version, its floor and its DMG off that one feed
+// instead of keeping copies that go stale. Regex, not DOMParser: this is read at
+// build time in node, where there is no DOM, over a file our own CI writes.
+// ponytail: first <item> wins. Fine while CI writes a single-item feed.
+export function parseAppcast(xml) {
+  const item = String(xml ?? '').split('<item>')[1] ?? ''
+  const tag = (name) => item.match(new RegExp(`<${name}>\\s*([^<]*?)\\s*</${name}>`))?.[1] ?? ''
+  return {
+    version: tag('sparkle:shortVersionString'),
+    minOS: tag('sparkle:minimumSystemVersion').replace(/(\.0)+$/, ''),
+    url: item.match(/<enclosure[^>]*\surl="([^"]*)"/)?.[1] ?? '',
+  }
+}

@@ -1,6 +1,5 @@
 // Change this once and every canonical, hreflang and og:url follows.
 export const SITE_URL = 'https://tokenpacer.com'
-export const VERSION = 'v0.1.0'
 export const FILE_SIZE = '2.7 MB'
 export const BREW = 'brew install --cask token-pacer'
 // Releases live on THIS repo — token-pacer is private, so its assets 404 for

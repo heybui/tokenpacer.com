@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
-import { parseNotes } from './releases.js'
+import { readFileSync } from 'node:fs'
+import { parseAppcast, parseNotes } from './releases.js'
 
 // The shape docs/RELEASE_NOTES.md asks for, as v1.0.0 actually shipped it.
 const real = parseNotes(`👋 **Hello, world!** Token Pacer 1.0 is here.
@@ -48,5 +49,15 @@ assert.deepEqual(parseNotes('- fix(ci): bound every wait\n- chore: drop a bindin
   lede: '',
   sections: [{ tag: '', items: ['fix(ci): bound every wait', 'chore: drop a binding'] }],
 })
+
+// The feed the page bakes its version and download link from, as it ships.
+const feed = parseAppcast(readFileSync(new URL('../public/appcast.xml', import.meta.url), 'utf8'))
+assert.match(feed.version, /^\d+\.\d+/)
+assert.match(feed.minOS, /^\d+$/) // trailing .0 trimmed — "macOS 15.0" reads wrong
+assert.match(feed.url, /^https:\/\/.*\.dmg$/)
+
+// No feed, or one still being written: empty strings, so the page falls back
+// rather than printing "vundefined".
+assert.deepEqual(parseAppcast(''), { version: '', minOS: '', url: '' })
 
 console.log('ok')

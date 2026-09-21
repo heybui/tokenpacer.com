@@ -5,7 +5,15 @@ import ChangelogModal from '../components/ChangelogModal.vue'
 import FeedbackModal from '../components/FeedbackModal.vue'
 import NotchDemo from '../components/NotchDemo.vue'
 import { useI18n } from '../i18n'
-import { COFFEE_URL, DOWNLOAD_URL, GH_REPO, SITE_URL, VERSION } from '../site'
+import { parseAppcast } from '../releases'
+import { useSparkles } from '../sparkles'
+import { COFFEE_URL, DOWNLOAD_URL, GH_REPO, SITE_URL } from '../site'
+// __APPCAST__ is public/appcast.xml, inlined by vite.config.js — the feed CI
+// rewrites on each release is the only place the shipped build is named, so the
+// version renders into the prerendered HTML rather than flashing a stale one.
+const app = parseAppcast(__APPCAST__)
+const dmg = app.url || DOWNLOAD_URL
+const { canvas, hover } = useSparkles()
 
 const { t } = useI18n()
 
@@ -48,8 +56,8 @@ useHead(
           '@type': 'SoftwareApplication',
           name: 'Token Pacer',
           applicationCategory: 'DeveloperApplication',
-          operatingSystem: 'macOS 15',
-          softwareVersion: VERSION,
+          operatingSystem: `macOS ${app.minOS}`,
+          softwareVersion: app.version,
           url: SITE_URL,
           description: t('meta.description'),
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -95,21 +103,6 @@ onUnmounted(() => {
   clearTimeout(swap)
 })
 
-// The appcast CI rewrites each release is the only place the current DMG is
-// named, so read the button's target from it instead of hardcoding a filename
-// that goes stale. Prerender ships the releases page as the href; this upgrades
-// it to a one-click download once the feed lands.
-// ponytail: takes the first enclosure. Fine while CI writes a single-item feed.
-const dmg = ref(DOWNLOAD_URL)
-onMounted(async () => {
-  try {
-    const feed = await (await fetch('/appcast.xml')).text()
-    const url = new DOMParser().parseFromString(feed, 'application/xml').querySelector('enclosure')?.getAttribute('url')
-    if (url) dmg.value = url
-  } catch {
-    /* feed unreachable — the releases page is already in the href */
-  }
-})
 </script>
 
 <template>
@@ -130,6 +123,10 @@ onMounted(async () => {
         background-repeat: no-repeat;
       "
     />
+    <!-- The sparkle field the download button throws off on hover. Fixed and
+         viewport-sized so a glyph can arc clear of the button. -->
+    <canvas ref="canvas" aria-hidden="true" class="pointer-events-none fixed inset-0 z-0" />
+
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:m-4 focus:rounded-lg focus:bg-go focus:px-4 focus:py-2 focus:text-[#06231a]">
       {{ t('nav.skip') }}
     </a>
@@ -175,12 +172,15 @@ onMounted(async () => {
           <div class="flex flex-wrap items-center gap-3">
             <a
               :href="dmg"
-              class="inline-flex items-center gap-[.55rem] rounded-[.625rem] bg-go px-[1.375rem] py-[.8rem] text-[.97rem] font-semibold whitespace-nowrap text-[#06231a] transition-colors hover:bg-[#56dfa0]"
+              v-on="hover"
+              class="relative z-[1] inline-flex items-center gap-[.55rem] rounded-[.625rem] bg-go px-[1.375rem] py-[.8rem] text-[.97rem] font-semibold whitespace-nowrap text-[#06231a] transition-colors hover:bg-[#56dfa0]"
             >
-              <svg viewBox="0 0 14 14" aria-hidden="true" class="size-[.875rem] shrink-0 fill-current">
-                <rect x="6" y="0" width="2" height="7" rx="1" />
-                <path d="M2 6h10L7 11z" />
-                <rect x="1" y="12" width="12" height="2" rx="1" />
+              <!-- Apple's glyph is taller than it is wide, so it is sized by
+                   height and left to keep its own ratio. The label has no
+                   descenders, so its optical centre sits above the line box —
+                   the nudge puts the glyph on that centre rather than the box's. -->
+              <svg viewBox="0 0 814 1000" aria-hidden="true" class="relative -top-[.0625rem] h-[.95rem] w-[.78rem] shrink-0 fill-current">
+                <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57.8-155.5-127.4c-58.3-81.8-105.3-209.2-105.3-330.3 0-194.3 126.4-297.5 250.8-297.5 66.1 0 121.2 43.4 162.7 43.4 39.5 0 101.1-46 176.3-46 28.5 0 130.9 2.6 198.3 99.2zm-234-181.5c31.1-36.9 53.1-88.1 53.1-139.3 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 83.6-55.1 135.5 0 7.8.6 15.7 1.3 18.2 2.6.6 6.4 1.3 10.2 1.3 45.4 0 103.5-30.4 139.5-71.4z" />
               </svg>
               {{ t('cta.download') }}
             </a>
@@ -199,6 +199,10 @@ onMounted(async () => {
               {{ t('cta.coffee') }}
             </a>
           </div>
+
+          <p v-if="app.version" class="m-0 -mt-1 text-[.82rem] text-white/50">
+            v{{ app.version }} · {{ t('cta.requires', { os: app.minOS }) }}
+          </p>
         </div>
 
         <NotchDemo />
