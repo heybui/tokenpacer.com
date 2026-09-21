@@ -3,27 +3,26 @@
     <channel>
         <title>TokenPacer</title>
         <item>
-            <title>1.0.0</title>
-            <pubDate>Sun, 20 Sep 2026 07:38:32 +0000</pubDate>
-            <sparkle:version>220</sparkle:version>
-            <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
+            <title>1.1.0</title>
+            <pubDate>Mon, 21 Sep 2026 05:39:44 +0000</pubDate>
+            <sparkle:version>238</sparkle:version>
+            <sparkle:shortVersionString>1.1.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description><![CDATA[<p>👋 <strong>Hello, world!</strong> Token Pacer 1.0 is here.</p>
-<p>You run Claude Code, Codex and Copilot all day. Each has its own quota, on its own clock. To check one, you stop and ask. So you find out you were at 94% when it tells you 100% — always at the wrong moment.</p>
-<p>Now the notch just tells you. 🎉</p>
-<h3>✨ What it does</h3>
+            <description><![CDATA[<h3>✨ New</h3>
 <ul>
-<li>📊 One mark, one number, one countdown — in the menu bar, all day.</li>
-<li>🖱️ Hover to see all three side by side. Double-click to pin the history, the splits and a sparkline.</li>
-<li>🚨 One alert when you go over. Once. The amber zone stays quiet.</li>
-<li>🎨 Twelve marks and twelve running borders to pick from.</li>
+<li>💳 A Codex workspace metered in credits finally shows a figure…</li>
+<li>🎚️ Warning and critical zones are set per provider…</li>
+<li>📌 Pin the provider the pill carries straight from the card…</li>
 </ul>
-<h3>🚀 Get it</h3>
-<p>Download the disk image below. You need macOS 15, an Apple silicon Mac, and one of the CLIs installed and signed in.</p>
-<p>To read a usage screen, the app runs your CLI inside one of your trusted projects — so macOS asks once for that folder.</p>
+<h3>🔧 Fixed</h3>
+<ul>
+<li>📊 Copilot's token counts and its activity dot work again…</li>
+<li>🟢 The activity dot follows the sessions that are actually answering…</li>
+<li>🧹 Assorted panel fixes…</li>
+</ul>
 <p>💬 Tell me what breaks: <a href="https://tokenpacer.com/#feedback" rel="nofollow">https://tokenpacer.com/#feedback</a></p>]]></description>
-            <enclosure url="https://github.com/heybui/tokenpacer.com/releases/download/v1.0.0/TokenPacer-1.0.0.dmg" length="2791827" type="application/octet-stream" sparkle:edSignature="gXIa+bHC6CbEdyOgFjGiYeuuhhfD6Ws9GgA0HU3U4MTRqaYCJjBNzbYYqAZ9+jahF4qxkvlib2/TyWbp1fA1CA=="/>
+            <enclosure url="https://github.com/heybui/tokenpacer.com/releases/download/v1.1.0/TokenPacer-1.1.0.dmg" length="2939628" type="application/octet-stream" sparkle:edSignature="5dadiC1HIGMpZ+Pw6FOc7Hun5ECisc1W5b0xs5InRbNlSIjYoijg8/OqSi6bqsvHGxj5VX3QiMe5ZLxyWyBeBQ=="/>
         </item>
     </channel>
 </rss>
