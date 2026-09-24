@@ -20,7 +20,7 @@ const { t } = useI18n()
 // The repo owner is the profile — one handle to change, not two.
 const ghUser = GH_REPO.split('/')[0]
 
-const DOTS = ['#3ec98a', '#3ec98a', '#e8b33c', '#5aa9d6', '#e8b33c', '#3ec98a']
+const DOTS = ['#3ec98a', '#3ec98a', '#5aa9d6', '#e8b33c', '#5aa9d6', '#3ec98a']
 const features = computed(() => t('features').map((f, i) => ({ ...f, c: DOTS[i] })))
 
 useHead(

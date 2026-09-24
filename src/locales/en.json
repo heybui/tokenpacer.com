@@ -20,23 +20,23 @@
   "features": [
     {
       "label": "Always there, never in the way",
-      "note": "Lives in the notch. Nothing to open, nothing to click, no window in your way."
+      "note": "Lives in the notch. No notch? It docks in the menu bar, on whichever display you pick."
     },
     {
-      "label": "Multiple agents, one scale",
-      "note": "Claude Code, Codex and Copilot side by side — each with its own reset clock."
+      "label": "Every agent, side by side",
+      "note": "Claude Code, Codex and Copilot on one scale, each on its own reset. Click one to pin it to the menu bar."
     },
     {
       "label": "Real numbers only",
-      "note": "Every figure is the provider's own — reported, never inferred. Never an estimate, never a guess."
+      "note": "Every figure is the provider's own. When one can't be read, it says so and why — never a guess."
+    },
+    {
+      "label": "Warns you once, then waits",
+      "note": "Give each agent its own amber and red lines. Cross one and the pill opens by itself until you look."
     },
     {
       "label": "Nothing to sign into",
-      "note": "No account, no API key, no dashboard. It reads the CLI you already run — that's the whole setup."
-    },
-    {
-      "label": "Your usage stays yours",
-      "note": "No telemetry, no Accessibility prompt, nothing uploaded. The only call out is its own update check."
+      "note": "No account, no API key, no permission prompts. It reads the CLI you already run and sends nothing but an update check."
     },
     {
       "label": "Light on the Mac it watches",
