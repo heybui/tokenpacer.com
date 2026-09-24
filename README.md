@@ -1,7 +1,7 @@
 # tokenpacer.com
 
-The website for [Token Pacer](https://tokenpacer.com) — a macOS app that keeps your
-AI Providers (Claude Code, Codex, Copilot and more) usage in the notch.
+The website for [Token Pacer](https://tokenpacer.com) — a macOS app that keeps
+Claude Code, Codex and Copilot usage in the notch.
 
 ## Notes
 
