@@ -1,7 +1,5 @@
 // Change this once and every canonical, hreflang and og:url follows.
 export const SITE_URL = 'https://tokenpacer.com'
-export const FILE_SIZE = '2.7 MB'
-export const BREW = 'brew install --cask token-pacer'
 // Releases live on THIS repo — token-pacer is private, so its assets 404 for
 // everyone but us. Sparkle reads the same releases via public/appcast.xml.
 export const DOWNLOAD_URL = 'https://github.com/heybui/tokenpacer.com/releases/latest'
