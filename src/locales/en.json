@@ -54,48 +54,53 @@
   "demo": {
     "label": "Token Pacer in the notch, cycling through its states",
     "captions": {
-      "pill": "Collapsed — what's left, and how long until it resets",
-      "hover": "Hover — the weekly cap too, no click needed",
-      "panel": "Pinned — the whole picture, by model, project and provider",
-      "warn": "Crossing your line expands it on its own, once per window",
-      "red": "At the cap — the mark reads full, the countdown turns red",
+      "pill": "Collapsed — what you've used, and when it resets",
+      "working": "Working — the light runs, the badge counts sessions answering",
+      "hover": "Hover — every agent on one scale; click a row to pin it",
+      "panel": "Double-click — 90 days of history, by model, project and kind",
+      "warn": "Cross your line and it opens by itself, until you look",
+      "red": "At the cap — just a red countdown to the reset",
       "reset": "Window resets — back to full, on its own",
-      "prefs": "Your thresholds, your call — one slider sets both marks",
+      "prefs": "Each agent gets its own amber and red lines",
       "looks": "Twelve marks, twelve running lights — pick by watching, not by name"
     },
     "pauseHint": "Hover the demo to pause",
     "status": {
       "go": "Plenty of room",
-      "watch": "Running hot",
-      "over": "Wrap up soon"
+      "watch": "Usage is climbing",
+      "over": "Nearly at the limit"
     },
-    "left": "left",
-    "week": "Week",
+    "updated": "Updated 2 minutes ago",
+    "footer": "{name} at {pct} of this window",
+    "window": "5-HOUR",
     "resetsIn": "Resets in {time}",
-    "pinned": "session active · pinned",
-    "window": "5-hour",
     "weeklyCap": "Weekly cap",
-    "weeklyResets": "resets Mon 00:00",
-    "history": "Last 30 days",
-    "historyNote": "daily session use",
+    "weeklyNote": "{pct} · resets Mon 09:00",
+    "activity": "Activity",
+    "activityNote": "last 2 hours",
+    "history": "Last 90 days · busiest {day}",
     "wrapSoon": "{time} to reset · wrap up soon",
     "groups": {
       "model": "By model",
       "project": "By project",
-      "provider": "By provider"
+      "kind": "By kind"
+    },
+    "kinds": {
+      "output": "Output",
+      "input": "Input",
+      "cacheWrite": "Cache write",
+      "cacheRead": "Cache read"
     },
     "prefs": {
-      "alerts": "Alerts",
-      "watchAt": "Watch starts at",
-      "overAt": "Over starts at",
-      "sound": "Sound when over",
-      "general": "General",
-      "login": "Launch at login",
-      "hide": "Hide when nothing is running"
+      "providers": "Providers",
+      "ready": "All set",
+      "tracked": "Tracked automatically. Drag to set where each one turns amber and red.",
+      "watch": "watch",
+      "over": "over"
     },
     "looks": {
-      "marks": "Mark",
-      "borders": "Running light"
+      "marks": "Progress mark",
+      "borders": "Running border"
     }
   },
   "footer": {

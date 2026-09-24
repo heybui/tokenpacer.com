@@ -22,25 +22,15 @@
   --color-sunken: #14151a;
 
   --animate-cap-in: cap-in 340ms ease-out;
-  --animate-ring-pop: ring-pop 700ms cubic-bezier(.34, 1.56, .64, 1);
-  --animate-creep: creep 1.6s ease-in-out infinite;
+  --animate-creep: creep .8s ease-in-out infinite alternate;
   --animate-drift: drift 42s ease-in-out infinite;
-  --animate-glow-go: glow-go 2s ease-in-out infinite;
-  --animate-glow-watch: glow-watch 2s ease-in-out infinite;
-  --animate-glow-over: glow-over 2s ease-in-out infinite;
   --animate-fb-fade: fb-fade 180ms ease-out;
   --animate-fb-in: fb-in 240ms cubic-bezier(.22, 1, .36, 1);
 }
 
 @keyframes cap-in { from { opacity: 0; transform: translateY(.25rem); } to { opacity: 1; transform: none; } }
-@keyframes ring-pop { 0% { transform: scale(1); } 42% { transform: scale(1.13); } 100% { transform: scale(1); } }
-/* Individual translate/scale properties, not transform: Tailwind v4's
-   -translate-x-1/2 sets `translate`, so a transform here would stack on top of
-   it and lift the mark clear off the bar. */
-@keyframes creep {
-  0%, 100% { translate: -50% -50%; scale: 1 1; }
-  50% { translate: calc(-50% + .25rem) -50%; scale: 1 1.25; }
-}
+/* CreepingMarker.swift's creep: 3pt out and back, .8s each way, nothing else. */
+@keyframes creep { to { transform: translateX(var(--creep, 3px)); } }
 /* Transform, not background-position: the compositor moves an already-rastered
    layer instead of repainting three viewport-sized gradients every frame. */
 @keyframes drift {
@@ -67,18 +57,6 @@
     transition-duration: .01ms !important;
   }
 }
-@keyframes glow-go {
-  0%, 100% { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .125rem .375rem rgba(62,201,138,.28), inset 0 0 0 1px rgba(255,255,255,.08); }
-  50%      { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .3rem 1.5rem .375rem rgba(62,201,138,.85), inset 0 0 0 1px rgba(255,255,255,.08); }
-}
-@keyframes glow-watch {
-  0%, 100% { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .125rem .375rem rgba(232,179,60,.28), inset 0 0 0 1px rgba(255,255,255,.08); }
-  50%      { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .3rem 1.5rem .375rem rgba(232,179,60,.85), inset 0 0 0 1px rgba(255,255,255,.08); }
-}
-@keyframes glow-over {
-  0%, 100% { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .125rem .375rem rgba(226,84,63,.3), inset 0 0 0 1px rgba(255,255,255,.08); }
-  50%      { box-shadow: 0 1.125rem 2.875rem rgba(0,0,0,.6), 0 .3rem 1.5rem .375rem rgba(226,84,63,.88), inset 0 0 0 1px rgba(255,255,255,.08); }
-}
 
 /* macOS paints an expanded scrollbar with a light track unless the page says
    which scheme it is in — that track was what showed through the modal's
@@ -99,14 +77,54 @@ html:lang(vi) {
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", ui-sans-serif, sans-serif;
 }
 
-/* The running light. One angle property drives every conic variant, so twelve
-   border mechanisms cost four keyframes instead of twelve. */
+/* The running light, as BorderEffect.swift specifies it: a ramp that turns
+   rather than travels, bands that travel one edge, and lights that stay put.
+   One angle property drives every ramp; a light the app runs left to right
+   plays the same turn in reverse. */
 @property --tp-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
 @keyframes tp-run { to { --tp-a: 360deg; } }
-@keyframes tp-breathe { 0%, 100% { opacity: .18 } 50% { opacity: 1 } }
-@keyframes tp-pulse { 0%, 100% { opacity: .3 } 18% { opacity: 1 } }
-@keyframes tp-drip { from { background-position: 0 -120% } to { background-position: 0 220% } }
-@keyframes tp-sweep { from { background-position: -80% 0 } to { background-position: 180% 0 } }
+.tp-turn { animation: tp-run linear infinite; }
+@keyframes tp-breathe { from { opacity: .22 } to { opacity: 1 } }
+.tp-breathe { animation: tp-breathe ease-in-out infinite alternate; }
+/* The one light cast outside its shell: opacity breathes, the blur never does,
+   and nothing is cast up onto the hardware above the top edge. */
+@keyframes tp-glow { from { opacity: .18 } to { opacity: .9 } }
+.tp-glow { box-shadow: 0 3px 24px var(--c); clip-path: inset(0 -64px -64px -64px); animation: tp-glow ease-in-out infinite alternate; }
+/* A band enters a length and a third before its edge and leaves well past it. */
+@keyframes tp-band-y { from { transform: translateY(-130%) } to { transform: translateY(272.3%) } }
+@keyframes tp-band-x { from { transform: translateX(-130%) } to { transform: translateX(297.4%) } }
+.tp-band-y { animation: tp-band-y linear infinite backwards; }
+.tp-band-x { animation: tp-band-x linear infinite backwards; }
+/* The pill's own light fades over .3s and stops outright when nothing is
+   answering, rather than turning unseen. */
+.tp-light { opacity: 0; transition: opacity .3s, border-radius .9s var(--ease-spring); }
+.tp-light.on { opacity: 1; animation: tp-run 2.4s linear infinite reverse; }
+
+/* Tokens.spring — spring(duration: .6, bounce: .18) — sampled, since no
+   cubic-bezier has a spring's shape. It overshoots by 1.1% at 525ms. */
+:root {
+  --ease-spring: linear(0, 0.0297 2.8%, 0.1028 5.6%, 0.2001 8.3%, 0.3077 11.1%, 0.4161 13.9%, 0.5191 16.7%, 0.6127 19.4%, 0.6951 22.2%, 0.7657 25%, 0.8246 27.8%, 0.8726 30.6%, 0.911 33.3%, 0.9409 36.1%, 0.9636 38.9%, 0.9804 41.7%, 0.9924 44.4%, 1.0007 47.2%, 1.006 50%, 1.0092 52.8%, 1.0107 55.6%, 1.0111 58.3%, 1.0107 61.1%, 1.0099 63.9%, 1.0088 66.7%, 1.0076 69.4%, 1.0064 72.2%, 1.0053 75%, 1.0043 77.8%, 1.0034 80.6%, 1.0026 83.3%, 1.0019 86.1%, 1.0014 88.9%, 1.001 91.7%, 1.0006 94.4%, 1.0004 97.2%, 1);
+}
+.tp-shell { transition: width .9s var(--ease-spring), height .9s var(--ease-spring), border-radius .9s var(--ease-spring), box-shadow .3s; }
+
+/* markEasing: a reading lands with a .6s ease-out, never a jump. */
+.mark-rule { transition: left .6s ease-out; }
+
+/* OdometerText.swift: a 0–9 strip per digit, clipped to one glyph and rolled
+   to the value on the board's curve. */
+.odo { display: inline-flex; height: 1.2em; line-height: 1.2em; white-space: pre; }
+.odo-cell { display: block; width: .6em; height: 1.2em; overflow: hidden; }
+.odo-strip { display: flex; flex-direction: column; text-align: center; transition: translate .48s cubic-bezier(.32, .72, 0, 1); }
+.odo-strip > span { height: 1.2em; }
+
+/* JobBadge.swift: out to 1.28 in 99ms, back over 121ms, on appearing and on
+   every change of count. */
+@keyframes badge-pop {
+  0% { scale: 1; animation-timing-function: cubic-bezier(.32, .72, 0, 1); }
+  45% { scale: 1.28; animation-timing-function: cubic-bezier(.32, .72, 0, 1); }
+  100% { scale: 1; }
+}
+.badge-pop { animation: badge-pop 220ms; }
 
 /* The feedback modal, straight off the design board. */
 @keyframes fb-fade { from { opacity: 0 } to { opacity: 1 } }
