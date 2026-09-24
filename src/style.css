@@ -48,6 +48,9 @@
 .page-idle *, .page-idle *::before, .page-idle *::after {
   animation-play-state: paused !important;
 }
+/* Except a one-shot fade: paused at its first frame it is simply invisible,
+   and a caption that arrived as the window lost focus stayed that way. */
+.demo-asleep .animate-cap-in, .page-idle .animate-cap-in { animation-play-state: running !important; }
 
 /* Nothing here is load-bearing, so honour the OS switch. */
 @media (prefers-reduced-motion: reduce) {
