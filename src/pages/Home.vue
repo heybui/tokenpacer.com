@@ -7,13 +7,26 @@ import NotchDemo from '../components/NotchDemo.vue'
 import { useI18n } from '../i18n'
 import { parseAppcast } from '../releases'
 import { useSparkles } from '../sparkles'
-import { COFFEE_URL, DOWNLOAD_URL, GH_REPO, SITE_URL } from '../site'
+import { BREW, COFFEE_URL, DOWNLOAD_URL, GH_REPO, SITE_URL } from '../site'
 // __APPCAST__ is public/appcast.xml, inlined by vite.config.js — the feed CI
 // rewrites on each release is the only place the shipped build is named, so the
 // version renders into the prerendered HTML rather than flashing a stale one.
 const app = parseAppcast(__APPCAST__)
 const dmg = app.url || DOWNLOAD_URL
 const { canvas, hover } = useSparkles()
+
+const copied = ref(false)
+let reset
+const copyBrew = async () => {
+  try {
+    await navigator.clipboard.writeText(BREW)
+  } catch {
+    /* clipboard blocked — the command is on screen anyway */
+  }
+  copied.value = true
+  clearTimeout(reset)
+  reset = setTimeout(() => (copied.value = false), 1600)
+}
 
 const { t } = useI18n()
 
@@ -199,6 +212,18 @@ onUnmounted(() => {
               {{ t('cta.coffee') }}
             </a>
           </div>
+
+          <button
+            type="button"
+            :aria-label="t('cta.copyHint')"
+            class="inline-flex max-w-full cursor-pointer items-center gap-[.625rem] self-start rounded-lg bg-sunken px-[.8rem] py-[.55rem] ring-1 ring-white/7 transition-[box-shadow] hover:ring-white/16"
+            @click="copyBrew"
+          >
+            <span class="truncate font-mono text-[.82rem] text-white/72">{{ BREW }}</span>
+            <span class="text-[.78rem] font-medium whitespace-nowrap" :class="copied ? 'text-go' : 'text-white/40'">
+              {{ copied ? t('cta.copied') : t('cta.copy') }}
+            </span>
+          </button>
 
           <p v-if="app.version" class="m-0 -mt-1 text-[.82rem] text-white/50">
             v{{ app.version }} · {{ t('cta.requires', { os: app.minOS }) }}

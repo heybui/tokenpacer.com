@@ -46,6 +46,9 @@
   "cta": {
     "download": "Download for macOS",
     "coffee": "Buy me a coffee",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyHint": "Copy the Homebrew command",
     "requires": "Requires macOS {os}"
   },
   "demo": {
