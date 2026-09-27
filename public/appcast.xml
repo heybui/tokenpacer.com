@@ -3,24 +3,21 @@
     <channel>
         <title>TokenPacer</title>
         <item>
-            <title>1.2.0</title>
-            <pubDate>Thu, 24 Sep 2026 16:18:29 +0000</pubDate>
-            <sparkle:version>277</sparkle:version>
-            <sparkle:shortVersionString>1.2.0</sparkle:shortVersionString>
+            <title>1.2.1</title>
+            <pubDate>Sun, 27 Sep 2026 09:38:49 +0000</pubDate>
+            <sparkle:version>282</sparkle:version>
+            <sparkle:shortVersionString>1.2.1</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description><![CDATA[<p>⚡ <strong>Pick which screen the pill lives on, and a refresh button that actually refreshes.</strong></p>
-<h3>✨ New</h3>
+            <description><![CDATA[<p>⚡ <strong>The running border now lights up for the Copilot CLI.</strong></p>
+<h3>🐛 Fixed</h3>
 <ul>
-<li>🖥️ Choose the display the pill shows on in Settings → App → Show on. It remembers your monitor when it's unplugged, and comes back<br>
-to it when you plug it in again.</li>
-<li><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> When any provider can't be read, the pill shows the warning in place of the job count — not only when it's the pinned one.</li>
-<li>🕐 The card says how fresh its figures are in plain words: "Updated 3 minutes ago", "Usage is climbing", "Nearly at the limit".</li>
-<li>🔌 Plugging in a monitor moves the pill straight to the top of the screen, instead of leaving it mid-screen until you hover it.</li>
-<li>🧹 After an update, every provider is read again at once instead of waiting out the old build's retry schedule.</li>
+<li>🟡 Prompting Copilot from the terminal now lights the running border around the notch, the same as Claude Code and Codex.<br>
+Before, only the Copilot desktop app's sessions showed. A session open in both places counts once.</li>
+<li>🍺 <code class="notranslate">brew install</code> / <code class="notranslate">brew upgrade</code> no longer prints a deprecation warning about the cask's <code class="notranslate">verified</code> parameter.</li>
 </ul>
 <p>💬 Tell me what breaks: <a href="https://tokenpacer.com/#feedback" rel="nofollow">https://tokenpacer.com/#feedback</a></p>]]></description>
-            <enclosure url="https://github.com/heybui/tokenpacer.com/releases/download/v1.2.0/TokenPacer-1.2.0.dmg" length="3697134" type="application/octet-stream" sparkle:edSignature="8FfKStWuKWQLEeprTRVd4+HhRp9gdQYrtKKkHyRVVxGTz/J0NZdjCCQtQiObrCSlsGgypFNqkhuFhkCYK4U0Ag=="/>
+            <enclosure url="https://github.com/heybui/tokenpacer.com/releases/download/v1.2.1/TokenPacer-1.2.1.dmg" length="3703220" type="application/octet-stream" sparkle:edSignature="qtDmooKppIQRibXHSlRvf1/ri5jtinCSK4VKS9DByo/fii6zMxgTHzrD5PePmDH8TwJ440Lt1pxLpq/LlGt9AQ=="/>
         </item>
     </channel>
 </rss>
