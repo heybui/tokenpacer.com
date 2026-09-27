@@ -30,6 +30,24 @@ const copyBrew = async () => {
 
 const { t } = useI18n()
 
+// A .dmg is no use on a phone or a PC, so there the button hands the link on
+// to the visitor's Mac instead. Decided after mount: the prerendered HTML (and
+// every crawler) keeps the download. iPadOS claims "MacIntel", but has touch.
+const sendToMac = ref(false)
+onMounted(() => {
+  sendToMac.value = !(/Mac/.test(navigator.platform) && navigator.maxTouchPoints < 2)
+})
+const mailSelf = `mailto:?subject=${encodeURIComponent('Token Pacer')}&body=${encodeURIComponent(SITE_URL)}`
+const share = async (e) => {
+  if (!sendToMac.value || !navigator.share) return // plain link: the dmg, or the mailto
+  e.preventDefault()
+  try {
+    await navigator.share({ title: 'Token Pacer', url: SITE_URL })
+  } catch {
+    /* dismissed the sheet */
+  }
+}
+
 // The repo owner is the profile — one handle to change, not two.
 const ghUser = GH_REPO.split('/')[0]
 
@@ -184,8 +202,9 @@ onUnmounted(() => {
 
           <div class="flex flex-wrap items-center gap-3">
             <a
-              :href="dmg"
+              :href="sendToMac ? mailSelf : dmg"
               v-on="hover"
+              @click="share"
               class="relative z-[1] inline-flex items-center gap-[.55rem] rounded-[.625rem] bg-go px-[1.375rem] py-[.8rem] text-[.97rem] font-semibold whitespace-nowrap text-[#06231a] transition-colors hover:bg-[#56dfa0]"
             >
               <!-- Apple's glyph is taller than it is wide, so it is sized by
@@ -195,7 +214,7 @@ onUnmounted(() => {
               <svg viewBox="0 0 814 1000" aria-hidden="true" class="relative -top-[.0625rem] h-[.95rem] w-[.78rem] shrink-0 fill-current">
                 <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57.8-155.5-127.4c-58.3-81.8-105.3-209.2-105.3-330.3 0-194.3 126.4-297.5 250.8-297.5 66.1 0 121.2 43.4 162.7 43.4 39.5 0 101.1-46 176.3-46 28.5 0 130.9 2.6 198.3 99.2zm-234-181.5c31.1-36.9 53.1-88.1 53.1-139.3 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 83.6-55.1 135.5 0 7.8.6 15.7 1.3 18.2 2.6.6 6.4 1.3 10.2 1.3 45.4 0 103.5-30.4 139.5-71.4z" />
               </svg>
-              {{ t('cta.download') }}
+              {{ sendToMac ? t('cta.sendToMac') : t('cta.download') }}
             </a>
 
             <a
