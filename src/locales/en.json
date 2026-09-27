@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Token Pacer — never hit the cap by surprise",
-    "description": "Claude Code, Codex and Copilot quotas live in your Mac's notch. Real numbers, straight from each provider. No account, no API key, no permissions.",
+    "description": "Claude Code, Codex, Copilot and more — your quotas live in your Mac's notch. Real numbers, straight from each provider. No account, no API key, no permissions.",
     "ogAlt": "Token Pacer — a green-to-red usage scale at 62%, with 2h 14m to reset."
   },
   "nav": {
@@ -15,7 +15,7 @@
       "Never get cut off mid-task",
       "Know before you're cut off"
     ],
-    "sub": "You find out you were at 94% by being told you're at 100% — mid-task, on the afternoon it matters. Token Pacer keeps Claude Code, Codex and Copilot in front of you all day, so you never have to ask."
+    "sub": "You find out you were at 94% by being told you're at 100% — mid-task, on the afternoon it matters. Token Pacer keeps Claude Code, Codex, Copilot and more in front of you all day, so you never have to ask."
   },
   "features": [
     {
@@ -24,7 +24,7 @@
     },
     {
       "label": "Every agent, side by side",
-      "note": "Claude Code, Codex and Copilot on one scale, each on its own reset. Click one to pin it to the menu bar."
+      "note": "Claude Code, Codex, Copilot and more on one scale, each on its own reset. Click one to pin it to the menu bar."
     },
     {
       "label": "Real numbers only",
@@ -108,7 +108,8 @@
     "rights": "© 2026 Token Pacer",
     "by": "@{user}",
     "changelog": "Changelog",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "press": "Press"
   },
   "changelog": {
     "title": "Changelog",
@@ -171,5 +172,61 @@
       "email": "Email",
       "required": "required"
     }
+  },
+  "press": {
+    "title": "Press kit — Token Pacer",
+    "description": "Descriptions, facts, logos, screenshots and video for writing about Token Pacer.",
+    "heading": "Press kit",
+    "sub": "Everything you need to write about Token Pacer. Use any of it, no need to ask.",
+    "back": "Back to Token Pacer",
+    "about": "About",
+    "short": "Token Pacer puts your quotas for Claude Code, Codex, Copilot and more in your Mac’s notch, so you never hit the cap by surprise.",
+    "long": "You usually find out you were at 94% by being told you’re at 100% — mid-task. Token Pacer is a free macOS app that keeps Claude Code, Codex, Copilot and more in the notch all day, with each provider’s real numbers and reset times. No account, no API key, no permissions. It’s native Swift, idles cheap, warns you once when you cross the amber or red line you set, and docks in the menu bar on Macs without a notch.",
+    "facts": "Facts",
+    "factRows": {
+      "name": "Name",
+      "developer": "Developer",
+      "price": "Price",
+      "download": "Download",
+      "contact": "Press contact"
+    },
+    "free": "Free",
+    "assets": "Logo & images",
+    "logoNote": "Keep the mark as is — no recolouring, stretching or effects.",
+    "video": "Video",
+    "videoNote": "48-second promo in landscape and vertical cuts. The 8-second clip is silent and loops, for embeds and social posts.",
+    "colors": "Colours",
+    "download": "Download",
+    "items": {
+      "icon": "App icon",
+      "og": "Social card",
+      "poster": "Promo still",
+      "panel": "Pinned panel",
+      "promo": "Promo video",
+      "clip": "Loop clip",
+      "vertical": "Promo video, vertical"
+    },
+    "swatches": [
+      {
+        "name": "Safe",
+        "hex": "#3ec98a"
+      },
+      {
+        "name": "Watch",
+        "hex": "#e8b33c"
+      },
+      {
+        "name": "Over",
+        "hex": "#e2543f"
+      },
+      {
+        "name": "Ground",
+        "hex": "#1d1f26"
+      },
+      {
+        "name": "Bite",
+        "hex": "#0f1014"
+      }
+    ]
   }
 }

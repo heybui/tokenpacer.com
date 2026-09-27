@@ -269,6 +269,7 @@ onUnmounted(() => {
       <nav class="flex items-center gap-4 sm:justify-self-end">
         <a href="#feedback" class="transition-colors hover:text-go">{{ t('footer.feedback') }}</a>
         <a href="#changelog" class="transition-colors hover:text-go">{{ t('footer.changelog') }}</a>
+        <RouterLink to="/press" class="transition-colors hover:text-go">{{ t('footer.press') }}</RouterLink>
       </nav>
     </footer>
 
