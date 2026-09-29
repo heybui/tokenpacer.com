@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "@fontsource-variable/instrument-sans";
 
+/* A laptop-height desktop: two columns, but not the room for the roomy spacing. */
+@custom-variant short (@media (min-width: 64rem) and (max-height: 61rem));
+
 @theme {
   --font-sans: "Instrument Sans Variable", ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;

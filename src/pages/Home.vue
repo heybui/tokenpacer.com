@@ -162,21 +162,21 @@ onUnmounted(() => {
       {{ t('nav.skip') }}
     </a>
 
-    <header class="flex items-center justify-center gap-[1.6rem] px-[2.125rem] pt-[3.125rem]">
+    <header class="flex items-center justify-center gap-[1.6rem] px-[2.125rem] pt-[3.125rem] short:gap-4 short:pt-5">
       <img
         src="/icon-256.png"
         alt=""
         width="256"
         height="256"
         fetchpriority="high"
-        class="block size-[7rem] rounded-[1.55rem] shadow-[0_1.125rem_2.5rem_rgba(0,0,0,.6)]"
+        class="block size-[7rem] rounded-[1.55rem] short:size-[4rem] short:rounded-[.9rem] shadow-[0_1.125rem_2.5rem_rgba(0,0,0,.6)]"
       />
-      <span class="text-[2.875rem] font-semibold tracking-[-.025em]">Token Pacer</span>
+      <span class="text-[2.875rem] font-semibold tracking-[-.025em] short:text-[2rem]">Token Pacer</span>
     </header>
 
-    <main id="main" class="flex flex-1 items-center justify-center px-[2.125rem] pt-10 pb-6">
+    <main id="main" class="flex flex-1 items-center justify-center px-[2.125rem] pt-10 pb-6 short:pt-2 short:pb-2">
       <div class="grid w-full max-w-[74rem] grid-cols-[repeat(auto-fit,minmax(min(27.5rem,100%),1fr))] items-center gap-14">
-        <div class="flex min-w-0 flex-col gap-[1.625rem]">
+        <div class="flex min-w-0 flex-col gap-[1.625rem] short:gap-3.5">
           <div class="flex flex-col gap-[.875rem]">
             <div class="@container flex flex-col gap-[.7rem]">
               <span class="font-mono text-[.78rem] font-medium tracking-[.14em] text-white/48 uppercase">{{ t('hero.eyebrow') }}</span>
@@ -187,10 +187,10 @@ onUnmounted(() => {
                 {{ headlines[hi] }}
               </h1>
             </div>
-            <p class="m-0 max-w-[46ch] text-[1.08rem] leading-[1.55] text-balance text-white/62">{{ t('hero.sub') }}</p>
+            <p class="m-0 text-[1.08rem] leading-[1.55] text-balance text-white/62">{{ t('hero.sub') }}</p>
           </div>
 
-          <ul class="grid list-none grid-cols-[repeat(auto-fit,minmax(min(13.5rem,100%),1fr))] gap-x-7 gap-y-4 p-0">
+          <ul class="grid list-none grid-cols-[repeat(auto-fit,minmax(min(13.5rem,100%),1fr))] gap-x-7 gap-y-4 p-0 short:gap-y-2.5">
             <li v-for="f in features" :key="f.label" class="flex min-w-0 flex-col gap-1">
               <div class="flex items-center gap-2">
                 <span class="size-[.3rem] shrink-0 rounded-full" :style="{ background: f.c }" />
@@ -253,7 +253,7 @@ onUnmounted(() => {
       </div>
     </main>
 
-    <footer class="grid grid-cols-1 items-center justify-items-center gap-2 px-[2.125rem] pt-[1.125rem] pb-7 text-[.82rem] text-white/52 sm:grid-cols-3">
+    <footer class="grid grid-cols-1 items-center justify-items-center gap-2 px-[2.125rem] pt-[1.125rem] pb-7 text-[.82rem] short:pt-2 short:pb-4 text-white/52 sm:grid-cols-3">
       <span class="sm:justify-self-start">{{ t('footer.rights') }}</span>
       <a
         :href="`https://github.com/${ghUser}`"
