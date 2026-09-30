@@ -3,21 +3,36 @@
     <channel>
         <title>TokenPacer</title>
         <item>
-            <title>1.2.1</title>
-            <pubDate>Sun, 27 Sep 2026 09:38:49 +0000</pubDate>
-            <sparkle:version>282</sparkle:version>
-            <sparkle:shortVersionString>1.2.1</sparkle:shortVersionString>
+            <title>1.3.0</title>
+            <pubDate>Wed, 30 Sep 2026 10:32:40 +0000</pubDate>
+            <sparkle:version>294</sparkle:version>
+            <sparkle:shortVersionString>1.3.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description><![CDATA[<p>⚡ <strong>The running border now lights up for the Copilot CLI.</strong></p>
-<h3>🐛 Fixed</h3>
+            <description><![CDATA[<p>⚡ <strong>The history heatmap now shows all of your past usage, updates install on their own, and a first launch no longer looks like the<br>
+app never started.</strong></p>
+<p><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> <strong>Heads up:</strong> the first launch after updating reads your Claude, Codex and Copilot logs again, which keeps the CPU busy for about<br>
+a minute. Everyone will also see the new welcome card once. Press <strong>Got it</strong> to close it.</p>
+<h3>✨ New</h3>
 <ul>
-<li>🟡 Prompting Copilot from the terminal now lights the running border around the notch, the same as Claude Code and Codex.<br>
-Before, only the Copilot desktop app's sessions showed. A session open in both places counts once.</li>
-<li>🍺 <code class="notranslate">brew install</code> / <code class="notranslate">brew upgrade</code> no longer prints a deprecation warning about the cask's <code class="notranslate">verified</code> parameter.</li>
+<li>👋 A fresh install opens a welcome card under the notch instead of hiding. It lists each provider, what it has reported, and the<br>
+one thing to do if it can't be read.</li>
+<li>🔄 Updates install on their own the next time your Mac is quiet, so you no longer need to quit the app. The card then tells you<br>
+which version you're on, with a link to what's new.</li>
+<li>↻ A button in the card reads your usage right away instead of waiting for the next check.</li>
+<li>🔀 By model, By project and By kind can switch between the 5-hour window and the weekly limit, and they list every row with a<br>
+scroll.</li>
+</ul>
+<h3>🔧 Fixed</h3>
+<ul>
+<li>📅 Copilot and older Codex versions now fill in the whole 90-day heatmap.</li>
+<li>⏱️ Claude's reset times are read correctly again, so the countdown no longer shows "4h 59m" after every refresh.</li>
+<li>📁 By project names the repository, not whichever subfolder the agent happened to be in.</li>
+<li>🖱️ Buttons in the notch cards light up under the pointer again.</li>
+<li>🧹 Model names are shown exactly as the CLI logs them, and the heatmap no longer prints two month names on top of each other.</li>
 </ul>
 <p>💬 Tell me what breaks: <a href="https://tokenpacer.com/#feedback" rel="nofollow">https://tokenpacer.com/#feedback</a></p>]]></description>
-            <enclosure url="https://github.com/heybui/tokenpacer.com/releases/download/v1.2.1/TokenPacer-1.2.1.dmg" length="3703220" type="application/octet-stream" sparkle:edSignature="qtDmooKppIQRibXHSlRvf1/ri5jtinCSK4VKS9DByo/fii6zMxgTHzrD5PePmDH8TwJ440Lt1pxLpq/LlGt9AQ=="/>
+            <enclosure url="https://github.com/heybui/tokenpacer.com/releases/download/v1.3.0/TokenPacer-1.3.0.dmg" length="3808024" type="application/octet-stream" sparkle:edSignature="yAkhb4NQt+rSFPV2qjTxBU4z9vSCjz++s7T1Mu/NuIgPm1GG4KzpLmvAi48u+kpfx7Xkdnkyhxaawd1LNoRaCA=="/>
         </item>
     </channel>
 </rss>
