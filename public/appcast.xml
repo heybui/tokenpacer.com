@@ -4,7 +4,7 @@
         <title>TokenPacer</title>
         <item>
             <title>1.3.0</title>
-            <pubDate>Wed, 30 Sep 2026 10:32:40 +0000</pubDate>
+            <pubDate>Wed, 30 Sep 2026 10:35:24 +0000</pubDate>
             <sparkle:version>294</sparkle:version>
             <sparkle:shortVersionString>1.3.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
@@ -32,7 +32,7 @@ scroll.</li>
 <li>🧹 Model names are shown exactly as the CLI logs them, and the heatmap no longer prints two month names on top of each other.</li>
 </ul>
 <p>💬 Tell me what breaks: <a href="https://tokenpacer.com/#feedback" rel="nofollow">https://tokenpacer.com/#feedback</a></p>]]></description>
-            <enclosure url="https://github.com/heybui/tokenpacer.com/releases/download/v1.3.0/TokenPacer-1.3.0.dmg" length="3808024" type="application/octet-stream" sparkle:edSignature="yAkhb4NQt+rSFPV2qjTxBU4z9vSCjz++s7T1Mu/NuIgPm1GG4KzpLmvAi48u+kpfx7Xkdnkyhxaawd1LNoRaCA=="/>
+            <enclosure url="https://github.com/heybui/tokenpacer.com/releases/download/v1.3.0/TokenPacer-1.3.0.dmg" length="3807552" type="application/octet-stream" sparkle:edSignature="1YGfVjh9r0vNyD5ppkx3rMcOAJ1qV7vaaOftjk+r50bwcYngiUOTC4hxdEUeAEuI/d/XRZpuW023V8INaGKoDA=="/>
         </item>
     </channel>
 </rss>
