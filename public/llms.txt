@@ -1,0 +1,112 @@
+# Token Pacer
+
+> Token Pacer is a free macOS app that shows your Claude Code, OpenAI Codex and GitHub Copilot usage quotas live in the Mac's notch (or the menu bar on Macs without one), so you never hit the cap by surprise. Every figure is the provider's own number, read locally from the CLI you already run. No account, no API key, no permission prompts, and no network traffic except the update check.
+
+- Platform: macOS 15 or later, Apple silicon (arm64)
+- Price: free. Optional tip at https://buymeacoffee.com/heybui
+- Built with: native Swift and CoreAnimation, no web view
+- Developer: heybui
+- Install: download the DMG from https://github.com/heybui/tokenpacer.com/releases/latest or run `brew install --cask redevify/tap/token-pacer`
+- Updates: installs updates itself via Sparkle (automatic checks on by default)
+- Support: support@tokenpacer.com, or https://github.com/heybui/tokenpacer.com/issues
+
+## The problem it solves
+
+Developers run coding agents for hours. Each agent has a quota, each quota resets on its own clock, and the only way to see one is to stop and ask the CLI. So you find out you were at 94% by being told you're at 100%, mid-task, on the afternoon it matters. The figures already exist; Token Pacer keeps them in front of you all day without being asked.
+
+It is for one person on one Mac. Not teams, not billing admins, not dashboards. There is no account, no sign-in and no server.
+
+## Product principles
+
+1. Never invent a number. Every percentage is the provider's own. If a figure can't be read, the app shows `--` and a warning badge explaining why. No estimates.
+2. Less is the product. The menu bar holds one mark, one figure and one countdown. Comparisons live in the hover card.
+3. Ask for nothing. No account, API key, Accessibility, Screen Recording, Automation or notification permission.
+4. The notch carries the state and the moment. It opens by itself only when you cross your amber or red line, and waits until you look. No banners.
+
+## Supported agents and what each reports
+
+- Claude Code: 5-hour rolling session %, weekly cap %, and monthly credit spend where the account buys usage past the plan.
+- OpenAI Codex: 5-hour %, weekly %, and plan name. A workspace metered in credits shows its monthly credit budget as the headline instead.
+- GitHub Copilot: one monthly plan budget in credits (for example `7,074 / 18,000 AIC`). Copilot has no 5-hour or weekly window.
+
+All three also feed a sparkline, splits by model, project and kind (input, output, cache write, cache read), and 90 days of history. Any agent CLI found on the Mac is tracked automatically; one that isn't installed simply has no row. Want another agent tracked? Ask via feedback.
+
+## What you see
+
+The pill in the notch has these states:
+
+- Collapsed (normal): the progress mark and percentage on the left, time to reset on the right.
+- Working: a light runs around the pill's outline while a model is answering; a badge counts sessions working.
+- Hover card: one row per agent on one scale, each with its own reset. Click a row to pin that agent to the menu bar.
+- Pinned panel (double-click): usage by model, project and kind, a sparkline, and 90 days of history.
+- Warning: when any agent crosses its amber (watch) or red (over) line, the pill opens by itself until the pointer comes near. Fires once per window per line. Optional sound.
+- At the cap: just a red countdown to the reset.
+- Hidden: after a set number of quiet minutes, the pill hides and the notch looks like stock hardware.
+
+Right-click opens Preferences, Check for updates, Send feedback and Quit. Esc or a click outside closes the panel.
+
+On Macs without a notch it docks as a single row at the top-center of the menu bar. You can choose which display shows it.
+
+## Zones and alerts
+
+One colour scale applies everywhere:
+
+- Safe (green #3ec98a): below the watch line
+- Watch (amber #e8b33c): between watch and over
+- Over (red #e2543f): above the over line
+
+Defaults are 75% and 90%, set per agent on its own two-handle slider in Preferences.
+
+## Customisation
+
+- 12 progress marks for the menu bar: Capsule bar (default), Ring wings, Notch tank, Pips, Half gauge, Eclipse, Token stack, Hourglass, Dotted arc, Dot matrix, Signal strength, Thermometer. Each animates its own way while a model is working.
+- 12 running borders: Comet (default), Dual comet, Zone sweep, Marching dashes, Pulse wave, Quarter trace, Counter pair, Breathe, Breathe glow, Edge runners, Side drip, Bottom sweep. Can be turned off.
+- Toggles for showing the percentage and the working-session count, launch at login, display choice, idle-hide delay, and automatic updates.
+- Diagnostics shows every provider's raw reply, with account ids and home paths stripped.
+
+## Privacy: what it reads
+
+All reads are local and read-only. The only file Token Pacer writes is its own state in `~/Library/Application Support/TokenPacer/`.
+
+- Claude Code: runs your own `claude` CLI's `/usage` screen in a hidden terminal (this makes no model call and costs nothing), and reads token counts from session logs in `~/.claude/projects` and live session state in `~/.claude/sessions`.
+- Codex: asks your own `codex` CLI for rate limits over its local JSON-RPC server (read-only, no model call), and reads token counts from `~/.codex/sessions`.
+- Copilot: asks your own `copilot` CLI for its quota over its local JSON-RPC interface (no prompt sent), and reads session totals from `~/.copilot/data.db` read-only.
+- `CLAUDE_CONFIG_DIR`, `CODEX_HOME` and `COPILOT_HOME` are respected.
+- Never read: prompt or response text, auth files, API tokens, the Keychain. Token Pacer holds no credentials of its own and calls no provider API itself.
+- Network: none except the Sparkle update check. Feedback is sent only when you submit the form.
+
+## Deliberate limits
+
+- No estimates, burn rates or "minutes of headroom". A countdown to reset is a fact; a projection is a guess.
+- Usage from web apps, desktop apps or cloud tasks leaves nothing on disk, so it can't be attributed. The headline percentage still catches it when the provider's figure refreshes.
+- No global hotkey (it would need the Accessibility permission).
+- No modelling of any provider's quota rules.
+- Copilot's reset date is the month boundary, since the CLI doesn't state the billing anniversary.
+
+## Pages
+
+- [Home](https://tokenpacer.com/): product overview, interactive notch demo, download, changelog and feedback form
+- [Press kit](https://tokenpacer.com/press): descriptions, facts, logo, screenshots, video and brand colours, free to use without asking
+- [Feedback](https://tokenpacer.com/#feedback): report a bug, suggest an idea or ask a question
+
+## Downloads and releases
+
+- [Latest release](https://github.com/heybui/tokenpacer.com/releases/latest): notarized DMG
+- [All releases and changelog](https://github.com/heybui/tokenpacer.com/releases)
+- [Sparkle appcast](https://tokenpacer.com/appcast.xml): current version, minimum macOS and DMG URL
+- [Issues](https://github.com/heybui/tokenpacer.com/issues): public bug reports and requests
+
+## Press assets
+
+- [App icon, 512 PNG](https://tokenpacer.com/press/token-pacer-icon-512.png)
+- [Social card, 1200x630](https://tokenpacer.com/press/og.jpg)
+- [Promo still, 1920x1080](https://tokenpacer.com/press/poster.jpg)
+- [Pinned panel screenshot](https://tokenpacer.com/press/shot-panel.png)
+- [Promo video, 48 s landscape](https://tokenpacer.com/press/token-pacer-promo.mp4)
+- [Promo video, 48 s vertical](https://tokenpacer.com/press/token-pacer-promo-vertical.mp4)
+- [Loop clip, 8 s silent](https://tokenpacer.com/press/token-pacer-clip.mp4)
+
+## Optional
+
+- [Source of this website](https://github.com/heybui/tokenpacer.com): Vue site and public releases. The app's own source is private.
+- [Buy me a coffee](https://buymeacoffee.com/heybui)
