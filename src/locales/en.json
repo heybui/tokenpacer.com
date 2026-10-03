@@ -202,6 +202,11 @@
       "og": "Social card",
       "poster": "Promo still",
       "panel": "Pinned panel",
+      "pill": "In the notch",
+      "hover": "Every agent, side by side",
+      "warn": "Warning at the red line",
+      "history": "Usage by model, project and kind",
+      "prefs": "Preferences",
       "promo": "Promo video",
       "clip": "Loop clip",
       "vertical": "Promo video, vertical"

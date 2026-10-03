@@ -19,6 +19,11 @@ const images = [
   { key: 'og', src: '/press/og.jpg', size: '1200 × 630 JPG' },
   { key: 'poster', src: '/press/poster.jpg', size: '1920 × 1080 JPG' },
   { key: 'panel', src: '/press/shot-panel.png', size: '1920 × 1080 PNG' },
+  { key: 'pill', src: '/press/shot-pill.png', size: '1920 × 1080 PNG' },
+  { key: 'hover', src: '/press/shot-hover.png', size: '1920 × 1080 PNG' },
+  { key: 'warn', src: '/press/shot-warn.png', size: '1920 × 1080 PNG' },
+  { key: 'history', src: '/press/shot-history.png', size: '1920 × 1080 PNG' },
+  { key: 'prefs', src: '/press/shot-prefs.png', size: '1920 × 1080 PNG' },
 ]
 const videos = [
   { key: 'promo', src: '/press/token-pacer-promo.mp4', size: '48 s · 1920 × 1080 · 12 MB' },
