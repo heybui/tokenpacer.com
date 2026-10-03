@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useHead } from '@unhead/vue'
-import { useI18n } from '../i18n'
-import { BREW, CONTACT_EMAIL, GH_REPO, SITE_URL } from '../site'
+import { useI18n } from '../utils/i18n'
+import { BREW, CONTACT_EMAIL, GH_REPO, SITE_URL } from '../utils/site'
 
 const { t } = useI18n()
 

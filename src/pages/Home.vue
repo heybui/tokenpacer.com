@@ -1,14 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useHead } from '@unhead/vue'
 import ChangelogModal from '../components/ChangelogModal.vue'
 import FeedbackModal from '../components/FeedbackModal.vue'
 import NotchDemo from '../components/NotchDemo.vue'
-import { useI18n } from '../i18n'
-import { parseAppcast } from '../releases'
-import { useSparkles } from '../sparkles'
-import { BREW, COFFEE_URL, DOWNLOAD_URL, GH_REPO, SITE_URL } from '../site'
-// __APPCAST__ is public/appcast.xml, inlined by vite.config.js — the feed CI
+import { useI18n } from '../utils/i18n'
+import { parseAppcast } from '../utils/releases'
+import { useSparkles } from '../utils/sparkles'
+import { BREW, COFFEE_URL, DOWNLOAD_URL, GH_REPO, SITE_URL } from '../utils/site'
+// __APPCAST__ is public/appcast.xml, inlined by vite.config.ts — the feed CI
 // rewrites on each release is the only place the shipped build is named, so the
 // version renders into the prerendered HTML rather than flashing a stale one.
 const app = parseAppcast(__APPCAST__)
@@ -16,7 +16,7 @@ const dmg = app.url || DOWNLOAD_URL
 const { canvas, hover } = useSparkles()
 
 const copied = ref(false)
-let reset
+let reset: ReturnType<typeof setTimeout> | undefined
 const copyBrew = async () => {
   try {
     await navigator.clipboard.writeText(BREW)
@@ -38,7 +38,7 @@ onMounted(() => {
   sendToMac.value = !(/Mac/.test(navigator.platform) && navigator.maxTouchPoints < 2)
 })
 const mailSelf = `mailto:?subject=${encodeURIComponent('Token Pacer')}&body=${encodeURIComponent(SITE_URL)}`
-const share = async (e) => {
+const share = async (e: Event) => {
   if (!sendToMac.value || !navigator.share) return // plain link: the dmg, or the mailto
   e.preventDefault()
   try {
@@ -52,7 +52,7 @@ const share = async (e) => {
 const ghUser = GH_REPO.split('/')[0]
 
 const DOTS = ['#3ec98a', '#3ec98a', '#5aa9d6', '#e8b33c', '#5aa9d6', '#3ec98a']
-const features = computed(() => t('features').map((f, i) => ({ ...f, c: DOTS[i] })))
+const features = computed(() => t('features').map((f: { label: string; note: string }, i: number) => ({ ...f, c: DOTS[i] })))
 
 useHead(
   computed(() => ({
@@ -117,7 +117,8 @@ onUnmounted(() => window.removeEventListener('hashchange', readHash))
 const headlines = computed(() => t('hero.headlines'))
 const hi = ref(0)
 const fading = ref(false)
-let rotate, swap
+let rotate: ReturnType<typeof setInterval> | undefined
+let swap: ReturnType<typeof setTimeout> | undefined
 onMounted(() => {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
   rotate = setInterval(() => {

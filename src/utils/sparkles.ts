@@ -6,25 +6,28 @@ import { onUnmounted, ref } from 'vue'
 // jank. The palette is the app's own tones.
 const CHARS = ['·', '˚', '∘', '⊹', '⋅', '⁺', '✧', '⋆', '˖', '∗']
 const COLORS = ['#3ec98a', '#e8b33c', '#5aa9d6', '#a5f0cd', '#fbcda2', '#f2f2f4']
-const pick = (a) => a[Math.floor(Math.random() * a.length)]
+const pick = <T>(a: T[]) => a[Math.floor(Math.random() * a.length)]
 
 export function useSparkles() {
-  const canvas = ref(null)
-  const bits = []
-  let frame = null // rAF handle, null while idle
-  let spawn = null // the emit interval, null once the cursor leaves
+  type Bit = { x: number; y: number; vx: number; vy: number; char: string; color: string; life: number; span: number; size: number }
+
+  const canvas = ref<HTMLCanvasElement | null>(null)
+  const bits: Bit[] = []
+  let frame: number | null = null // rAF handle, null while idle
+  let spawn: ReturnType<typeof setInterval> | null = null // the emit interval, null once the cursor leaves
   let at = { x: 0, y: 0 }
 
   // Sized on each enter instead of on a resize listener: a window resized
   // mid-hover is not worth a listener that lives for the whole page.
   const size = () => {
     const c = canvas.value
+    if (!c) return
     const r = devicePixelRatio || 1
     c.width = innerWidth * r
     c.height = innerHeight * r
     c.style.width = `${innerWidth}px`
     c.style.height = `${innerHeight}px`
-    c.getContext('2d').setTransform(r, 0, 0, r, 0, 0)
+    c.getContext('2d')?.setTransform(r, 0, 0, r, 0, 0)
   }
 
   const burst = () => {
@@ -73,14 +76,14 @@ export function useSparkles() {
     frame = bits.length || spawn ? requestAnimationFrame(draw) : null
   }
 
-  const move = (e) => (at = { x: e.clientX, y: e.clientY })
+  const move = (e: MouseEvent) => (at = { x: e.clientX, y: e.clientY })
 
   const leave = () => {
-    clearInterval(spawn)
+    if (spawn) clearInterval(spawn)
     spawn = null
   }
 
-  const enter = (e) => {
+  const enter = (e: MouseEvent) => {
     if (spawn || !canvas.value) return
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
     move(e)
@@ -92,7 +95,7 @@ export function useSparkles() {
 
   onUnmounted(() => {
     leave()
-    cancelAnimationFrame(frame)
+    if (frame) cancelAnimationFrame(frame)
   })
 
   return { canvas, hover: { mouseenter: enter, mousemove: move, mouseleave: leave } }

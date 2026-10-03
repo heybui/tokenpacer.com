@@ -1,6 +1,6 @@
-<script setup>
-import { computed, h, onMounted, onUnmounted, ref, watch } from 'vue'
-import { useI18n } from '../i18n'
+<script setup lang="ts">
+import { computed, h, onMounted, onUnmounted, ref, watch, type VNode } from 'vue'
+import { useI18n } from '../utils/i18n'
 
 const { t } = useI18n()
 
@@ -10,14 +10,15 @@ const GO = '#3ec98a'
 const WATCH = '#e8b33c'
 const OVER = '#e2543f'
 const INFO = '#5aa9d6'
-const LIGHT = { [GO]: '#a5f0cd', [WATCH]: '#fbcda2', [OVER]: '#f4ab9e' }
-const rgba = (hex, a) =>
+const LIGHT: Record<string, string> = { [GO]: '#a5f0cd', [WATCH]: '#fbcda2', [OVER]: '#f4ab9e' }
+const rgba = (hex: string, a: number) =>
   `rgb(${parseInt(hex.slice(1, 3), 16)} ${parseInt(hex.slice(3, 5), 16)} ${parseInt(hex.slice(5, 7), 16)} / ${a})`
 
 // Every agent is read against its own two marks, as Settings sets them.
-const CLAUDE = { warn: 75, over: 90 }
-const toneOf = (p, z = CLAUDE) => (p >= z.over ? OVER : p >= z.warn ? WATCH : GO)
-const lightOf = (p, z = CLAUDE) => LIGHT[toneOf(p, z)]
+type Zone = { warn: number; over: number }
+const CLAUDE: Zone = { warn: 75, over: 90 }
+const toneOf = (p: number, z = CLAUDE) => (p >= z.over ? OVER : p >= z.warn ? WATCH : GO)
+const lightOf = (p: number, z = CLAUDE) => LIGHT[toneOf(p, z)]
 
 const AGENTS = [
   { word: 'CLAUDE', name: 'Claude Code', pct: 58, week: 41, reset: '2h 06m', jobs: 2, zone: CLAUDE },
@@ -27,8 +28,9 @@ const AGENTS = [
 
 // Shell sizes follow PillState.swift: the band row, then whatever body the
 // state hangs under it. `hold` is how long the demo stays on each one.
+type State = { key: string; hold: number; pct: number; reset: string; jobs?: number; w: string; h: string; r: number }
 const PILL = { w: '14rem', h: '2.125rem', r: 13 }
-const STATES = [
+const STATES: State[] = [
   { key: 'pill', hold: 3000, pct: 58, reset: '2h 06m', ...PILL },
   { key: 'working', hold: 3000, pct: 58, reset: '2h 06m', jobs: 2, ...PILL },
   { key: 'hover', hold: 4200, pct: 58, reset: '2h 06m', jobs: 2, w: '24.5rem', h: '10.7rem', r: 26 },
@@ -50,15 +52,15 @@ const IDLE = ['pill', 'working', 'reset', 'prefs', 'looks']
 
 // OdometerText.swift: every digit is a 0–9 strip that rolls to its value.
 const DIGITS = [...'0123456789']
-const Odo = ({ text }) =>
+const Odo = ({ text }: { text: string }) =>
   h('span', { class: 'odo' }, [...String(text)].map((c, i) =>
     c >= '0' && c <= '9'
-      ? h('span', { key: i, class: 'odo-cell' }, h('span', { class: 'odo-strip', style: { translate: `0 ${-c * 1.2}em` } }, DIGITS.map((d) => h('span', d))))
+      ? h('span', { key: i, class: 'odo-cell' }, h('span', { class: 'odo-strip', style: { translate: `0 ${-Number(c) * 1.2}em` } }, DIGITS.map((d) => h('span', d))))
       : h('span', { key: `s${i}` }, c)))
 
 // JobBadge.swift: a 16.5pt circle that widens by 6.9pt a digit. Keyed on the
 // count where it is used, so every change pops it the way phaseAnimator does.
-const Badge = ({ n, scale = 1 }) =>
+const Badge = ({ n, scale = 1 }: { n: number; scale?: number }) =>
   h('span', {
     class: 'badge-pop inline-flex shrink-0 items-center justify-center rounded-full font-mono font-bold text-white',
     style: {
@@ -71,8 +73,9 @@ const Badge = ({ n, scale = 1 }) =>
 
 // CapsuleBar.swift: three static zone capsules with a 1% gap at each mark, a
 // 2pt rule riding them at the reading and the week as a black-ringed dot.
-const Capsule = ({ pct, week, zone = CLAUDE, s = 1, width, running }) => {
-  const seg = (a, b, c) =>
+type CapsuleProps = { pct?: number; week?: number | null; zone?: Zone; s?: number; width?: number; running?: boolean }
+const Capsule = ({ pct, week, zone = CLAUDE, s = 1, width, running }: CapsuleProps) => {
+  const seg = (a: number, b: number, c: string) =>
     h('span', { class: 'absolute rounded-full', style: { left: `${a}%`, width: `${b - a}%`, top: `${3.5 * s}px`, height: `${4 * s}px`, background: c } })
   return h('span', { class: 'relative block shrink-0', style: { width: width && `${width * s}px`, height: `${11 * s}px` } }, [
     seg(0, zone.warn - 1, GO),
@@ -91,12 +94,14 @@ const Capsule = ({ pct, week, zone = CLAUDE, s = 1, width, running }) => {
 
 // Marks.swift, all twelve at their own size, in points. `run` is the one tile
 // that is working: only the chosen mark moves, as in the app's pane.
-const rect = (x, y, width, height, rx, fill, extra) => h('rect', { x, y, width, height, rx, fill, ...extra })
-const dot = (cx, cy, r, fill, extra) => h('circle', { cx, cy, r, fill, ...extra })
-const path = (d, fill, extra) => h('path', { d, fill, ...extra })
-const clip = (id, shape) => h('clipPath', { id }, [shape])
+type Attrs = Record<string, unknown>
+const rect = (x: number, y: number, width: number, height: number, rx: number, fill?: string, extra?: Attrs) => h('rect', { x, y, width, height, rx, fill, ...extra })
+const dot = (cx: number, cy: number, r: number, fill?: string, extra?: Attrs) => h('circle', { cx, cy, r, fill, ...extra })
+const path = (d: string, fill?: string, extra?: Attrs) => h('path', { d, fill, ...extra })
+const clip = (id: string, shape: VNode) => h('clipPath', { id }, [shape])
 const FAINT = { opacity: 0.16 }
-const MARKS = [
+type Mark = { name: string; w: number; h: number; clip?: boolean; draw: (p: number, z: Zone, run?: boolean) => VNode[] }
+const MARKS: Mark[] = [
   { name: 'Capsule bar', w: 36, h: 11, draw: (p, z, run) => [
     rect(0, 3.5, 0.36 * (z.warn - 1), 4, 2, GO),
     rect(0.36 * (z.warn + 1), 3.5, 0.36 * (z.over - z.warn - 2), 4, 2, WATCH),
@@ -105,7 +110,7 @@ const MARKS = [
   ] },
   { name: 'Ring wings', w: 18, h: 18, draw: (p, z) => {
     const r = 7.75, c = 2 * Math.PI * r, a = ((p * 3.6 - 90) * Math.PI) / 180
-    const arc = (from, to, col) => dot(9, 9, r, 'none', {
+    const arc = (from: number, to: number, col: string) => dot(9, 9, r, 'none', {
       stroke: col, 'stroke-width': 2.5, 'stroke-dasharray': `${(c * (to - from)) / 100} ${c}`,
       'stroke-dashoffset': (-c * from) / 100, transform: 'rotate(-90 9 9)',
     })
@@ -136,8 +141,8 @@ const MARKS = [
     })
   } },
   { name: 'Half gauge', w: 36, h: 20, clip: true, draw: (p, z) => {
-    const at = (q) => { const a = ((180 + q * 1.8) * Math.PI) / 180; return [18 + 14.5 * Math.cos(a), 18 + 14.5 * Math.sin(a)] }
-    const arc = (from, to, col) => path(`M${at(from)}A14.5 14.5 0 0 1 ${at(to)}`, 'none', { stroke: col, 'stroke-width': 3 })
+    const at = (q: number) => { const a = ((180 + q * 1.8) * Math.PI) / 180; return [18 + 14.5 * Math.cos(a), 18 + 14.5 * Math.sin(a)] }
+    const arc = (from: number, to: number, col: string) => path(`M${at(from)}A14.5 14.5 0 0 1 ${at(to)}`, 'none', { stroke: col, 'stroke-width': 3 })
     const [x, y] = at(p)
     return [arc(0, z.warn - 1, GO), arc(z.warn + 1, z.over - 1, WATCH), arc(z.over + 1, 100, OVER), dot(x, y, 4, '#000'), dot(x, y, 2.75, lightOf(p, z))]
   } },
@@ -191,20 +196,28 @@ const MARKS = [
     ]
   } },
 ]
-const MarkSvg = ({ mark, pct, run }) =>
+const MarkSvg = ({ mark, pct, run }: { mark: Mark; pct: number; run?: boolean }) =>
   h('svg', { viewBox: `0 0 ${mark.w} ${mark.h}`, width: mark.w, height: mark.h, style: { overflow: mark.clip ? 'hidden' : 'visible' } }, mark.draw(pct, CLAUDE, run))
 
 // BorderEffect.swift's rendering spec: angles clockwise from twelve, straight
 // alphas, one turn per duration. A light the app mirrors to run left to right
 // has its table mirrored here too, and turns the other way.
-const mirror = (stops) => [...stops].reverse().map(([a, tint, alpha]) => [360 - a, tint, alpha])
-const dashes = (n, lit) => Array.from({ length: n }, (_, i) => [[(i * 360) / n, 'zone', 0.8], [(i * 360) / n + lit, 'zone', 0.8], [(i * 360) / n + lit, 'clear'], [((i + 1) * 360) / n, 'clear']]).flat()
-const paint = (tint, alpha, tone, light) =>
-  ({ zone: rgba(tone, alpha), head: rgba(light, alpha), safe: rgba(GO, alpha), watch: rgba(WATCH, alpha), over: rgba(OVER, alpha) })[tint] ?? 'transparent'
-const conic = (stops, tone = GO, light = LIGHT[GO]) =>
+// [angle, tint, alpha] — a stop with no alpha is clear.
+type Stop = [deg: number, tint: string, alpha?: number]
+const mirror = (stops: Stop[]) => [...stops].reverse().map(([a, tint, alpha]): Stop => [360 - a, tint, alpha])
+const dashes = (n: number, lit: number) => Array.from({ length: n }, (_, i): Stop[] => [[(i * 360) / n, 'zone', 0.8], [(i * 360) / n + lit, 'zone', 0.8], [(i * 360) / n + lit, 'clear'], [((i + 1) * 360) / n, 'clear']]).flat()
+const paint = (tint: string, alpha: number, tone: string, light: string) =>
+  ({ zone: rgba(tone, alpha), head: rgba(light, alpha), safe: rgba(GO, alpha), watch: rgba(WATCH, alpha), over: rgba(OVER, alpha) } as Record<string, string>)[tint] ?? 'transparent'
+const conic = (stops: Stop[], tone = GO, light = LIGHT[GO]) =>
   `conic-gradient(from var(--tp-a), ${stops.map(([a, tint, alpha = 0]) => `${paint(tint, alpha, tone, light)} ${a}deg`).join(', ')})`
 const COMET = mirror([[0, 'clear'], [266.4, 'clear'], [324, 'zone', 0.33], [360, 'head', 1]])
-const BORDERS = [
+type Border = {
+  name: string
+  turns?: { stops: Stop[]; s: number; ccw?: boolean }[]
+  solid?: { alpha: number; s: number; pulse?: boolean; glow?: boolean }
+  bands?: [edge: string, tint: string, s: number, begin: number][]
+}
+const BORDERS: Border[] = [
   { name: 'Comet', turns: [{ stops: COMET, s: 2.4, ccw: true }] },
   { name: 'Dual comet', turns: [{ stops: mirror([[0, 'clear'], [129.6, 'clear'], [169.2, 'zone', 0.33], [180, 'head', 1], [190.8, 'clear'], [309.6, 'clear'], [349.2, 'zone', 0.33], [360, 'head', 1]]), s: 3, ccw: true }] },
   { name: 'Zone sweep', turns: [{ stops: [[0, 'safe', 1], [120, 'watch', 1], [240, 'over', 1], [360, 'safe', 1]], s: 5 }] },
@@ -237,7 +250,7 @@ const SPARK = Array.from({ length: 26 }, (_, i) =>
 // busiest day in range: there is no daily cap for a day to be a share of.
 const HISTORY = (() => {
   const now = new Date()
-  const day = (offset) => new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset)
+  const day = (offset: number) => new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset)
   const days = Array.from({ length: 90 }, (_, i) => {
     const d = day(i - 89)
     const weekend = d.getDay() === 0 || d.getDay() === 6
@@ -266,7 +279,7 @@ const clock = ref('')
 const lap = ref(0)
 
 const state = computed(() => STATES[index.value])
-const is = (key) => state.value.key === key
+const is = (key: string) => state.value.key === key
 const burning = computed(() => BURNING.includes(state.value.key))
 const chasing = computed(() => CHASING.includes(state.value.key))
 const tone = computed(() => toneOf(state.value.pct))
@@ -298,14 +311,14 @@ const fmtClock = () => {
 // background tab, or behind another app nobody is watching, so stop there.
 // hasFocus() is the case the other two miss: an unfocused window is still
 // visible and still not hidden, so only blur/focus report it.
-const root = ref(null)
+const root = ref<HTMLElement | null>(null)
 const asleep = ref(false)
 const offscreen = ref(false)
 const refresh = () => (asleep.value = offscreen.value || document.hidden || !document.hasFocus())
 
 // Each state holds for its own time; a hold that ends while paused waits out
 // another one rather than skipping ahead.
-let cycle
+let cycle: ReturnType<typeof setTimeout> | undefined
 const schedule = () => {
   clearTimeout(cycle)
   cycle = setTimeout(() => {
@@ -315,7 +328,7 @@ const schedule = () => {
 }
 
 // AppearancePane.run(): 0 → watch → over → 100, twenty steps a zone, 100ms each.
-let lapTimer
+let lapTimer: ReturnType<typeof setInterval> | undefined
 watch(() => state.value.key, (key) => {
   clearInterval(lapTimer)
   lap.value = 0
@@ -330,13 +343,14 @@ watch(() => state.value.key, (key) => {
   }, 100)
 })
 
-let tick, io
+let tick: ReturnType<typeof setInterval> | undefined
+let io: IntersectionObserver | undefined
 onMounted(() => {
   clock.value = fmtClock()
   tick = setInterval(() => (clock.value = fmtClock()), 15000)
   schedule()
   io = new IntersectionObserver(([e]) => { offscreen.value = !e.isIntersecting; refresh() })
-  io.observe(root.value)
+  if (root.value) io.observe(root.value)
   document.addEventListener('visibilitychange', refresh)
   addEventListener('blur', refresh)
   addEventListener('focus', refresh)
@@ -527,7 +541,7 @@ onUnmounted(() => {
                 CLAUDE
                 <svg viewBox="0 0 8 6" class="h-[5px] w-[7px] text-white/35" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="m1 1.5 3 3 3-3" /></svg>
               </span>
-              <Badge :key="state.jobs" :n="state.jobs" :scale="1.15" />
+              <Badge :key="state.jobs" :n="state.jobs!" :scale="1.15" />
               <span class="flex-1" />
               <svg viewBox="0 0 16 16" class="size-[11.5px] text-white/42" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 2 9.5 6.5M9.5 3v3.5H13M2 14l4.5-4.5M6.5 13V9.5H3" />
@@ -606,7 +620,7 @@ onUnmounted(() => {
                         <span class="font-mono text-white/70">{{ t('demo.weeklyNote', { pct: `${AGENTS[0].week}%` }) }}</span>
                       </div>
                       <div class="h-[7px] overflow-hidden rounded-full bg-white/12">
-                        <div class="h-full rounded-full" :style="{ width: `${AGENTS[0].week}%`, background: toneOf(AGENTS[0].week) }" />
+                        <div class="h-full rounded-full" :style="{ width: `${AGENTS[0].week}%`, background: toneOf(AGENTS[0].week!) }" />
                       </div>
                     </div>
                     <div class="flex flex-col gap-2">

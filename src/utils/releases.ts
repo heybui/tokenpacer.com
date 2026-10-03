@@ -3,27 +3,30 @@
 // changelog renders that shape, so parse it rather than render markdown — a
 // renderer is a dependency plus an HTML-injection surface for one heading level
 // and one list level.
-const inline = (s) =>
+export type Section = { tag: string; items: string[] }
+
+const inline = (s: string) =>
   s
     .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
     .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/[`*_]{1,2}/g, '')
     .trim()
 
-export function parseNotes(body) {
-  const sections = []
+export function parseNotes(body: unknown) {
+  const sections: Section[] = []
   let lede = ''
-  let current = null // the section being filled
+  let current = null as Section | null // the section being filled
   let open = -1 // index of the item a wrapped line continues, -1 when closed
 
-  const section = (tag) => {
-    current = { tag, items: [] }
-    sections.push(current)
+  const section = (tag: string) => {
+    const next: Section = { tag, items: [] }
+    current = next
+    sections.push(next)
     open = -1
   }
-  const push = (text) => {
+  const push = (text: string) => {
     if (!current) section('')
-    open = current.items.push(text) - 1
+    open = current!.items.push(text) - 1
   }
 
   for (const raw of String(body ?? '').split('\n')) {
@@ -48,7 +51,7 @@ export function parseNotes(body) {
     }
 
     const text = inline(line)
-    if (open >= 0) current.items[open] += ' ' + text // a wrapped line
+    if (open >= 0) current!.items[open] += ' ' + text // a wrapped line
     else if (!lede && !current) lede = text
     else push(text)
   }
@@ -60,9 +63,9 @@ export function parseNotes(body) {
 // instead of keeping copies that go stale. Regex, not DOMParser: this is read at
 // build time in node, where there is no DOM, over a file our own CI writes.
 // ponytail: first <item> wins. Fine while CI writes a single-item feed.
-export function parseAppcast(xml) {
+export function parseAppcast(xml: unknown) {
   const item = String(xml ?? '').split('<item>')[1] ?? ''
-  const tag = (name) => item.match(new RegExp(`<${name}>\\s*([^<]*?)\\s*</${name}>`))?.[1] ?? ''
+  const tag = (name: string) => item.match(new RegExp(`<${name}>\\s*([^<]*?)\\s*</${name}>`))?.[1] ?? ''
   return {
     version: tag('sparkle:shortVersionString'),
     minOS: tag('sparkle:minimumSystemVersion').replace(/(\.0)+$/, ''),

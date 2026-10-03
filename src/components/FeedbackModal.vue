@@ -1,14 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onUnmounted, ref } from 'vue'
 import ModalShell from './ModalShell.vue'
-import { useI18n } from '../i18n'
-import { CONTACT_EMAIL, GH_REPO, MC_ACTION, MC_BOT_FIELD, MC_MAX } from '../site'
+import { useI18n } from '../utils/i18n'
+import { CONTACT_EMAIL, GH_REPO, MC_ACTION, MC_BOT_FIELD, MC_MAX } from '../utils/site'
 
 const { t } = useI18n()
 const emit = defineEmits(['close'])
 
 // key → [Mailchimp MMERGE7 value, GitHub label, title prefix]
-const KINDS = [
+const KINDS: [key: string, merge: string, label: string, prefix: string][] = [
   ['bug', 'bug', 'bug', 'Bug: '],
   ['idea', 'idea', 'enhancement', 'Idea: '],
   ['question', 'question', 'question', 'Question: '],
@@ -45,19 +45,19 @@ const issueUrl = () => {
   return `https://github.com/${GH_REPO}/issues/new?${q}`
 }
 
-const kept = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v))
+const kept = (o: Record<string, string>) => Object.fromEntries(Object.entries(o).filter(([, v]) => v))
 
 // Neither hand-off takes the modal over any more — whatever is typed stays put
 // and the button reports itself in a tooltip that clears on its own.
 const flash = ref({ at: '', text: '' })
-let clear
-const say = (at, text) => {
+let clear: ReturnType<typeof setTimeout> | undefined
+const say = (at: string, text: string) => {
   flash.value = { at, text }
   clearTimeout(clear)
   clear = setTimeout(() => (flash.value = { at: '', text: '' }), 2400)
 }
 
-const handOff = async (where) => {
+const handOff = async (where: 'github' | 'email') => {
   if (where === 'github') {
     window.open(issueUrl(), '_blank', 'noopener')
     return say('github', t('feedback.routes.opened'))
@@ -82,15 +82,17 @@ const send = () => {
 
   const cb = `mc_${Date.now()}`
   const script = document.createElement('script')
-  const done = (message) => {
-    delete window[cb]
+  // The JSONP callback hangs off window under a name made up per request.
+  const w = window as unknown as Record<string, unknown>
+  const done = (message: string) => {
+    delete w[cb]
     script.remove()
     sending.value = false
     if (message) err.value = message
     else route.value = 'direct'
   }
 
-  window[cb] = (res) => {
+  w[cb] = (res?: { result?: string; msg?: string }) => {
     // A repeat address comes back as an error and the merge fields are not
     // updated. Telling someone their feedback failed is worse than a thanks.
     const already = /already subscribed/i.test(res?.msg ?? '')
@@ -110,7 +112,7 @@ const send = () => {
 }
 
 // Mailchimp prefixes with the field index ("0 - ...") and marks links up.
-const clean = (s) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/, '').trim()
+const clean = (s?: string) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*-\s*/, '').trim()
 </script>
 
 <template>

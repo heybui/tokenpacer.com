@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, onUnmounted, useId } from 'vue'
 
 // Backdrop, panel, Escape and the scroll lock — the chrome both modals on the
@@ -12,7 +12,7 @@ const emit = defineEmits(['close'])
 
 const titleId = useId()
 
-const onKey = (e) => e.key === 'Escape' && emit('close')
+const onKey = (e: KeyboardEvent) => e.key === 'Escape' && emit('close')
 onMounted(() => {
   window.addEventListener('keydown', onKey)
   document.body.style.overflow = 'hidden'

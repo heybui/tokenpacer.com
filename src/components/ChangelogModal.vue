@@ -1,17 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import ModalShell from './ModalShell.vue'
-import { useI18n } from '../i18n'
-import { parseNotes } from '../releases'
-import { GH_REPO } from '../site'
+import { useI18n } from '../utils/i18n'
+import { parseNotes } from '../utils/releases'
+import { GH_REPO } from '../utils/site'
 
 const { t } = useI18n()
 const emit = defineEmits(['close'])
 
 const RELEASES_URL = `https://github.com/${GH_REPO}/releases`
 
-const state = ref('loading')
-const release = ref(null)
+const state = ref<'loading' | 'empty' | 'err' | 'ok'>('loading')
+const release = ref<(ReturnType<typeof parseNotes> & { v: string; date: string }) | null>(null)
 
 const day = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year: 'numeric' })
 
@@ -25,7 +25,7 @@ onMounted(async () => {
       headers: { Accept: 'application/vnd.github+json' },
     })
     if (res.status === 404) return (state.value = 'empty')
-    if (!res.ok) throw new Error(res.status)
+    if (!res.ok) throw new Error(String(res.status))
     const r = await res.json()
     const notes = parseNotes(r.body)
     release.value = {
@@ -42,12 +42,12 @@ onMounted(async () => {
 // The sections RELEASE_NOTES.md names by example, in the app's own tones. Notes
 // are free to invent their own — emoji and all — and those read neutral rather
 // than have a colour guessed for them.
-const TONE = { new: 'text-go', fixed: 'text-info', 'heads up': 'text-watch' }
-const tone = (tag) => TONE[tag.toLowerCase().replace(/[^a-z ]/g, '').trim()] ?? 'text-white/45'
+const TONE: Record<string, string> = { new: 'text-go', fixed: 'text-info', 'heads up': 'text-watch' }
+const tone = (tag: string) => TONE[tag.toLowerCase().replace(/[^a-z ]/g, '').trim()] ?? 'text-white/45'
 
 // The notes are told to use absolute https links, so a bare URL is expected and
 // should be clickable. Split rather than v-html: no markup reaches the DOM.
-const parts = (text) => text.split(/(https?:\/\/[^\s<>()]+[^\s<>().,;:!?])/g)
+const parts = (text: string) => text.split(/(https?:\/\/[^\s<>()]+[^\s<>().,;:!?])/g)
 </script>
 
 <template>
@@ -78,7 +78,7 @@ const parts = (text) => text.split(/(https?:\/\/[^\s<>()]+[^\s<>().,;:!?])/g)
           </a>
         </p>
 
-        <template v-else>
+        <template v-else-if="release">
           <div class="flex flex-wrap items-baseline gap-[.625rem]">
             <span class="text-[.97rem] font-semibold text-white">{{ release.v }}</span>
             <span class="font-mono text-[.69rem] text-white/58">{{ release.date }}</span>
