@@ -10,15 +10,15 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/heybui/tokenpacer.com/releases/latest"><img src="https://img.shields.io/github/v/release/heybui/tokenpacer.com?label=version&color=3ec98a" alt="Latest version"></a>
-  <a href="https://github.com/heybui/tokenpacer.com/releases"><img src="https://img.shields.io/github/downloads/heybui/tokenpacer.com/total?color=3ec98a" alt="Downloads"></a>
+  <a href="https://github.com/heybui/token-pacer/releases/latest"><img src="https://img.shields.io/github/v/release/heybui/token-pacer?label=version&color=3ec98a" alt="Latest version"></a>
+  <a href="https://github.com/heybui/token-pacer/releases"><img src="https://img.shields.io/github/downloads/heybui/token-pacer/total?color=3ec98a" alt="Downloads"></a>
   <img src="https://img.shields.io/badge/macOS-15%2B-1d1f26?logo=apple&logoColor=white" alt="macOS 15+">
   <img src="https://img.shields.io/badge/price-free-e8b33c" alt="Free">
   <a href="https://buymeacoffee.com/heybui"><img src="https://img.shields.io/badge/buy%20me%20a-coffee-ffdd00?logo=buymeacoffee&logoColor=black" alt="Buy me a coffee"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/heybui/tokenpacer.com/releases/latest"><strong>Download for macOS</strong></a> ·
+  <a href="https://github.com/heybui/token-pacer/releases/latest"><strong>Download for macOS</strong></a> ·
   <a href="https://tokenpacer.com">tokenpacer.com</a> ·
   <a href="https://tokenpacer.com/press">Press kit</a>
 </p>
@@ -60,7 +60,7 @@ all day, so you never have to ask.**
 
 ## Install
 
-**Download** the latest DMG from [Releases](https://github.com/heybui/tokenpacer.com/releases/latest),
+**Download** the latest DMG from [Releases](https://github.com/heybui/token-pacer/releases/latest),
 or with Homebrew:
 
 ```sh
@@ -79,11 +79,10 @@ saved you an afternoon, you can [buy me a coffee](https://buymeacoffee.com/heybu
 
 ## About this repo
 
-This is the website at [tokenpacer.com](https://tokenpacer.com), plus the app’s
-public releases.
+This is the website at [tokenpacer.com](https://tokenpacer.com).
 
-- **Releases live in this repo.** The app itself is private, so its DMGs and the
-  Sparkle appcast (`public/appcast.xml`) are published from here.
-- **The changelog modal reads the latest release** from the GitHub API and parses
+- **App releases live in [token-pacer](https://github.com/heybui/token-pacer/releases).**
+  This repo serves the Sparkle appcast at `public/appcast.xml`.
+- **The changelog modal reads the latest app release** from the GitHub API and parses
   its body, so editing release notes needs no redeploy.
 - **Deploy** is GitHub Pages on every push to `main`. No build-time env.

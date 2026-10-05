@@ -3,12 +3,12 @@ import { onMounted, ref } from 'vue'
 import ModalShell from './ModalShell.vue'
 import { useI18n } from '../utils/i18n'
 import { parseNotes } from '../utils/releases'
-import { GH_REPO } from '../utils/site'
+import { RELEASE_REPO } from '../utils/site'
 
 const { t } = useI18n()
 const emit = defineEmits(['close'])
 
-const RELEASES_URL = `https://github.com/${GH_REPO}/releases`
+const RELEASES_URL = `https://github.com/${RELEASE_REPO}/releases`
 
 const state = ref<'loading' | 'empty' | 'err' | 'ok'>('loading')
 const release = ref<(ReturnType<typeof parseNotes> & { v: string; date: string }) | null>(null)
@@ -21,7 +21,7 @@ const day = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year
 // no release yet, which is the empty state rather than a failure.
 onMounted(async () => {
   try {
-    const res = await fetch(`https://api.github.com/repos/${GH_REPO}/releases/latest`, {
+    const res = await fetch(`https://api.github.com/repos/${RELEASE_REPO}/releases/latest`, {
       headers: { Accept: 'application/vnd.github+json' },
     })
     if (res.status === 404) return (state.value = 'empty')

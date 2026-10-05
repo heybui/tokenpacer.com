@@ -54,7 +54,7 @@ assert.deepEqual(parseNotes('- fix(ci): bound every wait\n- chore: drop a bindin
 const feed = parseAppcast(readFileSync(new URL('../../public/appcast.xml', import.meta.url), 'utf8'))
 assert.match(feed.version, /^\d+\.\d+/)
 assert.match(feed.minOS, /^\d+$/) // trailing .0 trimmed — "macOS 15.0" reads wrong
-assert.match(feed.url, /^https:\/\/.*\.dmg$/)
+assert.match(feed.url, /^https:\/\/github\.com\/heybui\/token-pacer\/releases\/download\/v[^/]+\/TokenPacer-[^/]+\.dmg$/)
 
 // No feed, or one still being written: empty strings, so the page falls back
 // rather than printing "vundefined".
