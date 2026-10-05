@@ -72,7 +72,7 @@ It updates itself from then on. Free, no strings.
 ## Tell me what breaks
 
 Found a bug or want another agent tracked? [Send feedback](https://tokenpacer.com/#feedback)
-or [open an issue](https://github.com/heybui/tokenpacer.com/issues). If Token Pacer
+or [open an issue](https://github.com/heybui/token-pacer/issues). If Token Pacer
 saved you an afternoon, you can [buy me a coffee](https://buymeacoffee.com/heybui) ☕
 
 ---

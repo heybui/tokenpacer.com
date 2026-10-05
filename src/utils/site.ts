@@ -11,7 +11,7 @@ export const MC_ACTION =
 export const MC_BOT_FIELD = 'b_680a3c16f17ebe57f4fc63531_13f604e155'
 // Mailchimp clips a text merge field at 255 bytes, silently.
 export const MC_MAX = 255
-// Feedback and press links still use the site's public issue tracker.
-export const GH_REPO = 'heybui/tokenpacer.com'
+// GitHub feedback and press links use the app repo.
+export const GH_REPO = RELEASE_REPO
 export const CONTACT_EMAIL = 'support@tokenpacer.com'
 export const COFFEE_URL = 'https://buymeacoffee.com/heybui'

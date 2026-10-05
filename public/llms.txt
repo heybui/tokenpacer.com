@@ -8,7 +8,7 @@
 - Developer: heybui
 - Install: download the DMG from https://github.com/heybui/token-pacer/releases/latest or run `brew install --cask redevify/tap/token-pacer`
 - Updates: installs updates itself via Sparkle (automatic checks on by default)
-- Support: support@tokenpacer.com, or https://github.com/heybui/tokenpacer.com/issues
+- Support: support@tokenpacer.com, or https://github.com/heybui/token-pacer/issues
 
 ## The problem it solves
 
@@ -94,7 +94,7 @@ All reads are local and read-only. The only file Token Pacer writes is its own s
 - [Latest release](https://github.com/heybui/token-pacer/releases/latest): notarized DMG
 - [All releases and changelog](https://github.com/heybui/token-pacer/releases)
 - [Sparkle appcast](https://tokenpacer.com/appcast.xml): current version, minimum macOS and DMG URL
-- [Issues](https://github.com/heybui/tokenpacer.com/issues): public bug reports and requests
+- [Issues](https://github.com/heybui/token-pacer/issues): public bug reports and requests
 
 ## Press assets
 
