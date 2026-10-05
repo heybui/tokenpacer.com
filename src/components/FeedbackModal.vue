@@ -2,7 +2,7 @@
 import { computed, onUnmounted, ref } from 'vue'
 import ModalShell from './ModalShell.vue'
 import { useI18n } from '../utils/i18n'
-import { CONTACT_EMAIL, GH_REPO, MC_ACTION, MC_BOT_FIELD, MC_MAX } from '../utils/site'
+import { CONTACT_EMAIL, RELEASE_REPO, MC_ACTION, MC_BOT_FIELD, MC_MAX } from '../utils/site'
 
 const { t } = useI18n()
 const emit = defineEmits(['close'])
@@ -42,7 +42,7 @@ const issueUrl = () => {
     topic: t(`feedback.kinds.${kind.value[0]}.label`),
     details: msg.value.trim(),
   }))
-  return `https://github.com/${GH_REPO}/issues/new?${q}`
+  return `https://github.com/${RELEASE_REPO}/issues/new?${q}`
 }
 
 const kept = (o: Record<string, string>) => Object.fromEntries(Object.entries(o).filter(([, v]) => v))
@@ -216,7 +216,7 @@ const clean = (s?: string) => (s ?? '').replace(/<[^>]*>/g, '').replace(/^\d+\s*
               <span class="h-px flex-1 bg-white/8" />
             </div>
             <div class="grid grid-cols-2 gap-[.625rem]">
-              <div v-for="r in [['github', 'GH', `${GH_REPO}`, '↗'], ['email', '@', CONTACT_EMAIL, '⧉']]" :key="r[0]" class="relative">
+              <div v-for="r in [['github', 'GH', `${RELEASE_REPO}`, '↗'], ['email', '@', CONTACT_EMAIL, '⧉']]" :key="r[0]" class="relative">
                 <button
                   type="button"
                   class="flex w-full cursor-pointer items-center gap-[.625rem] rounded-[.7rem] bg-[#17181d] px-[.8rem] py-[.7rem] text-left shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)] transition-[background,box-shadow] hover:bg-[#1c1e23] hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,.16)]"

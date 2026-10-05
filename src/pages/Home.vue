@@ -7,7 +7,7 @@ import NotchDemo from '../components/NotchDemo.vue'
 import { useI18n } from '../utils/i18n'
 import { parseAppcast } from '../utils/releases'
 import { useSparkles } from '../utils/sparkles'
-import { BREW, COFFEE_URL, DOWNLOAD_URL, GH_REPO, SITE_URL } from '../utils/site'
+import { BREW, COFFEE_URL, DOWNLOAD_URL, RELEASE_REPO, SITE_URL } from '../utils/site'
 // __APPCAST__ is public/appcast.xml, inlined by vite.config.ts — the feed CI
 // rewrites on each release is the only place the shipped build is named, so the
 // version renders into the prerendered HTML rather than flashing a stale one.
@@ -49,7 +49,7 @@ const share = async (e: Event) => {
 }
 
 // The repo owner is the profile — one handle to change, not two.
-const ghUser = GH_REPO.split('/')[0]
+const ghUser = RELEASE_REPO.split('/')[0]
 
 const DOTS = ['#3ec98a', '#3ec98a', '#5aa9d6', '#e8b33c', '#5aa9d6', '#3ec98a']
 const features = computed(() => t('features').map((f: { label: string; note: string }, i: number) => ({ ...f, c: DOTS[i] })))

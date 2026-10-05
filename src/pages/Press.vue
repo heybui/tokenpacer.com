@@ -2,13 +2,13 @@
 import { computed } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useI18n } from '../utils/i18n'
-import { BREW, CONTACT_EMAIL, GH_REPO, SITE_URL } from '../utils/site'
+import { BREW, CONTACT_EMAIL, RELEASE_REPO, SITE_URL } from '../utils/site'
 
 const { t } = useI18n()
 
 const facts = computed(() => [
   ['name', 'Token Pacer'],
-  ['developer', GH_REPO.split('/')[0]],
+  ['developer', RELEASE_REPO.split('/')[0]],
   ['price', t('press.free')],
   ['download', `${SITE_URL.replace('https://', '')} · ${BREW}`],
   ['contact', CONTACT_EMAIL],
